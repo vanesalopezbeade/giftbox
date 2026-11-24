@@ -3,82 +3,95 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Regalos en Familia</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <meta name="theme-color" content="#4f46e5" />
+  <title>Ideas de Regalos</title>
   <style>
     :root {
-      --bg: #FAF9F6;
-      --surface: #FFFFFF;
-      --surface-muted: #F3F1EC;
-      --border: #E7E5E0;
-      --text: #18181B;
-      --text-muted: #52525B;
-      --accent: #0F766E;
-      --accent-hover: #115E59;
-      --accent-soft: #CCFBF1;
-      --success: #15803D;
-      --danger: #B91C1C;
-      --radius-lg: 20px;
-      --radius-md: 12px;
-      --shadow-sm: 0 2px 10px rgba(24, 24, 27, 0.05);
-      --shadow-lg: 0 18px 40px rgba(24, 24, 27, 0.14);
+      --bg: #f4f5f8;
+      --surface: #ffffff;
+      --surface-muted: #f1f5f9;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --primary: #4f46e5;
+      --primary-dark: #4338ca;
+      --primary-soft: #eef2ff;
+      --success: #10b981;
+      --success-soft: #d1fae5;
+      --danger: #ef4444;
+      --danger-soft: #fee2e2;
+      --border: #e2e8f0;
+      --radius: 16px;
+      --shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.06);
+      --shadow-md: 0 10px 25px rgba(15, 23, 42, 0.10);
     }
 
-    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
 
     html, body {
       margin: 0;
       padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       background: var(--bg);
       color: var(--text);
-      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
       min-height: 100dvh;
+      overscroll-behavior-y: contain;
     }
 
-    h1, h2, .font-display {
-      font-family: 'Fraunces', Georgia, serif;
+    .hidden {
+      display: none !important;
     }
-
-    .hidden { display: none !important; }
 
     button, input, select {
       font-family: inherit;
     }
 
-    /* ======================== LOCK SCREEN ======================== */
-    .lock-screen {
+    /* ================= PANTALLA DE BLOQUEO (PIN) ================= */
+    #lock-screen {
       min-height: 100dvh;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 24px 16px;
+      padding: 24px 20px;
+      background: linear-gradient(165deg, #eef2ff 0%, #f8fafc 55%, #fdf2f8 100%);
     }
 
     .lock-card {
       width: 100%;
-      max-width: 380px;
+      max-width: 360px;
       background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 28px;
-      padding: 28px 22px;
-      box-shadow: var(--shadow-sm);
+      border-radius: 24px;
+      padding: 28px 22px 24px;
+      box-shadow: var(--shadow-md);
       text-align: center;
+    }
+
+    .lock-icon {
+      width: 56px;
+      height: 56px;
+      margin: 0 auto 12px;
+      border-radius: 18px;
+      background: var(--primary-soft);
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
     }
 
     .lock-title {
       margin: 0 0 6px;
-      font-size: 1.75rem;
-      line-height: 1.15;
-      letter-spacing: -0.02em;
+      font-size: 1.35rem;
+      font-weight: 700;
     }
 
     .lock-subtitle {
-      margin: 0 0 24px;
+      margin: 0 0 22px;
       font-size: 0.92rem;
       color: var(--text-muted);
-      line-height: 1.45;
     }
 
     .pin-dots {
@@ -91,245 +104,345 @@
     .pin-dot {
       width: 18px;
       height: 18px;
-      border-radius: 999px;
-      border: 2px solid #D4D4D8;
+      border-radius: 50%;
+      border: 2px solid #cbd5e1;
       background: transparent;
       transition: transform 0.15s ease, background-color 0.15s ease, border-color 0.15s ease;
     }
 
     .pin-dot.filled {
-      background: var(--accent);
-      border-color: var(--accent);
+      background: var(--primary);
+      border-color: var(--primary);
       transform: scale(1.1);
     }
 
     .pin-dots.shake {
-      animation: pinShake 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      animation: shake 0.36s ease-in-out;
     }
 
-    @keyframes pinShake {
+    @keyframes shake {
       0%, 100% { transform: translateX(0); }
-      25% { transform: translateX(-8px); }
-      50% { transform: translateX(8px); }
-      75% { transform: translateX(-4px); }
+      20% { transform: translateX(-8px); }
+      40% { transform: translateX(8px); }
+      60% { transform: translateX(-6px); }
+      80% { transform: translateX(6px); }
+    }
+
+    .pin-error {
+      min-height: 22px;
+      margin: 0 0 14px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--danger);
     }
 
     .pin-status {
       min-height: 22px;
-      font-size: 0.85rem;
-      font-weight: 500;
-      margin-bottom: 20px;
-      color: var(--text-muted);
+      margin: 0 0 14px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--primary);
     }
-
-    .pin-status.error { color: var(--danger); }
 
     .keypad {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 12px;
-      max-width: 288px;
-      margin: 0 auto;
     }
 
     .key-btn {
       height: 64px;
-      border-radius: 18px;
+      border-radius: 16px;
       border: 1px solid var(--border);
-      background: var(--bg);
+      background: var(--surface-muted);
       color: var(--text);
-      font-size: 1.4rem;
+      font-size: 1.5rem;
       font-weight: 600;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: transform 0.1s ease, background-color 0.15s ease;
+      transition: transform 0.08s ease, background-color 0.12s ease;
       user-select: none;
     }
 
-    .key-btn:active { transform: scale(0.95); background: var(--surface-muted); }
-    .key-btn.action { font-size: 0.9rem; font-weight: 600; color: var(--text-muted); }
-    .key-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .key-btn:active {
+      transform: scale(0.95);
+      background: #e2e8f0;
+    }
 
-    /* ======================== MAIN APP ======================== */
+    .key-btn.key-action {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      background: var(--surface);
+    }
+
+    .key-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* ================= APP PRINCIPAL ================= */
+    #app-screen {
+      padding-bottom: calc(96px + env(safe-area-inset-bottom));
+    }
+
     .topbar {
       position: sticky;
       top: 0;
       z-index: 30;
-      background: rgba(250, 249, 246, 0.9);
-      backdrop-filter: blur(12px);
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
       border-bottom: 1px solid var(--border);
     }
 
     .topbar-inner {
-      max-width: 1120px;
+      max-width: 1024px;
       margin: 0 auto;
-      padding: 10px 16px;
+      padding: 12px 16px 8px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 12px;
+      gap: 10px;
     }
 
     .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .brand-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      background: var(--primary-soft);
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .brand h1 {
       margin: 0;
-      font-size: 1.25rem;
+      font-size: 1.15rem;
+      font-weight: 800;
       white-space: nowrap;
-      letter-spacing: -0.02em;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .topbar-actions {
       display: flex;
       align-items: center;
       gap: 8px;
+      flex-shrink: 0;
     }
 
-    .btn-ghost {
-      min-height: 44px;
+    .btn-pill {
+      height: 40px;
       padding: 0 14px;
-      border-radius: 12px;
+      border-radius: 999px;
       border: 1px solid var(--border);
       background: var(--surface);
       color: var(--text);
-      font-size: 0.86rem;
+      font-size: 0.88rem;
       font-weight: 600;
       cursor: pointer;
-      white-space: nowrap;
-    }
-
-    .btn-primary {
-      min-height: 44px;
-      padding: 0 18px;
-      border-radius: 12px;
-      border: none;
-      background: var(--accent);
-      color: #FFFFFF;
-      font-size: 0.9rem;
-      font-weight: 600;
-      cursor: pointer;
-      white-space: nowrap;
       display: inline-flex;
       align-items: center;
-      justify-content: center;
-      gap: 8px;
+      gap: 6px;
     }
 
-    .btn-primary:hover { background: var(--accent-hover); }
-    .btn-primary:disabled { opacity: 0.6; cursor: wait; }
-
-    .container {
-      max-width: 1120px;
-      margin: 0 auto;
-      padding: 16px 16px 104px;
+    .btn-pill.primary-outline {
+      border-color: #c7d2fe;
+      background: var(--primary-soft);
+      color: var(--primary);
     }
 
-    .summary-line {
-      font-size: 0.88rem;
-      color: var(--text-muted);
-      margin: 0 0 14px;
-      font-variant-numeric: tabular-nums;
-    }
-
-    .tabs-bar {
-      display: flex;
-      gap: 8px;
-      overflow-x: auto;
-      padding-bottom: 6px;
-      margin-bottom: 18px;
-      scrollbar-width: none;
-    }
-    .tabs-bar::-webkit-scrollbar { display: none; }
-
-    .tab-btn {
-      min-height: 44px;
-      padding: 0 16px;
-      border-radius: 12px;
+    .btn-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 999px;
       border: 1px solid var(--border);
       background: var(--surface);
       color: var(--text-muted);
-      font-size: 0.88rem;
-      font-weight: 600;
-      white-space: nowrap;
-      flex-shrink: 0;
+      font-size: 1.1rem;
       cursor: pointer;
-      transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Pestañas dinámicas de personas */
+    .tabs-bar {
+      max-width: 1024px;
+      margin: 0 auto;
+      padding: 6px 16px 12px;
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .tabs-bar::-webkit-scrollbar {
+      display: none;
+    }
+
+    .tab-btn {
+      flex-shrink: 0;
+      height: 38px;
+      padding: 0 16px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
     }
 
     .tab-btn.active {
-      background: var(--text);
-      color: #FFFFFF;
-      border-color: var(--text);
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
     }
 
-    .grid {
+    .tab-count {
+      font-size: 0.78rem;
+      opacity: 0.85;
+    }
+
+    /* Contenedor principal y galería */
+    .main-container {
+      max-width: 1024px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+
+    .gifts-grid {
       display: grid;
       grid-template-columns: 1fr;
       gap: 16px;
     }
 
     @media (min-width: 640px) {
-      .grid { grid-template-columns: repeat(2, 1fr); }
+      .gifts-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
     }
 
-    @media (min-width: 1024px) {
-      .grid { grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    @media (min-width: 960px) {
+      .gifts-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
     }
 
     .gift-card {
       background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
+      border-radius: var(--radius);
       overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border);
       display: flex;
       flex-direction: column;
-      box-shadow: var(--shadow-sm);
-      transition: opacity 0.2s ease;
+      transition: opacity 0.2s ease, transform 0.15s ease;
     }
 
     .gift-card.purchased {
-      opacity: 0.72;
+      opacity: 0.68;
+      background: #f8fafc;
     }
 
-    .gift-media {
+    .gift-photo-wrap {
+      position: relative;
       width: 100%;
       aspect-ratio: 4 / 3;
-      background: var(--surface-muted);
-      position: relative;
+      background: linear-gradient(135deg, #e0e7ff 0%, #fce7f3 100%);
       overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--text-muted);
-      font-size: 0.85rem;
     }
 
-    .gift-media img {
+    .gift-photo {
       width: 100%;
       height: 100%;
       object-fit: cover;
       display: block;
+      cursor: zoom-in;
     }
 
-    .gift-body {
-      padding: 16px;
+    .gift-photo-placeholder {
+      width: 100%;
+      height: 100%;
       display: flex;
       flex-direction: column;
-      flex: 1;
-      gap: 10px;
-    }
-
-    .gift-meta {
-      font-size: 0.8rem;
-      font-weight: 600;
-      color: var(--text-muted);
-      display: flex;
       align-items: center;
+      justify-content: center;
+      color: #6366f1;
+      font-size: 2.5rem;
       gap: 6px;
     }
 
-    .gift-meta .status-bought {
-      color: var(--success);
+    .gift-photo-placeholder span {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .purchased-ribbon {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: var(--success);
+      color: #fff;
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 5px 10px;
+      border-radius: 999px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .gift-body {
+      padding: 14px 16px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      flex: 1;
+    }
+
+    .gift-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .person-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: var(--primary-soft);
+      color: var(--primary);
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+
+    .price-badge {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: var(--text);
     }
 
     .gift-title {
@@ -337,7 +450,7 @@
       font-size: 1.08rem;
       font-weight: 700;
       line-height: 1.35;
-      color: var(--text);
+      word-break: break-word;
     }
 
     .gift-card.purchased .gift-title {
@@ -345,16 +458,9 @@
       color: var(--text-muted);
     }
 
-    .gift-price {
-      font-size: 1rem;
-      font-weight: 700;
-      font-variant-numeric: tabular-nums;
-      color: var(--accent);
-    }
-
     .gift-actions {
       margin-top: auto;
-      padding-top: 8px;
+      padding-top: 6px;
       display: flex;
       flex-direction: column;
       gap: 8px;
@@ -363,105 +469,133 @@
     .gift-actions-row {
       display: flex;
       gap: 8px;
+      align-items: stretch;
     }
 
     .btn-link {
-      min-height: 44px;
+      height: 44px;
       padding: 0 14px;
-      border-radius: var(--radius-md);
-      border: 1px solid var(--border);
-      background: var(--bg);
-      color: var(--text);
-      font-size: 0.86rem;
-      font-weight: 600;
+      border-radius: 12px;
+      background: var(--surface-muted);
+      color: var(--primary);
       text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 700;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 6px;
+      border: 1px solid #c7d2fe;
     }
 
-    .btn-toggle {
+    .btn-buy-toggle {
       flex: 1;
       min-height: 44px;
-      padding: 0 12px;
-      border-radius: var(--radius-md);
+      padding: 8px 12px;
+      border-radius: 12px;
       border: 1px solid var(--border);
       background: var(--surface);
       color: var(--text);
-      font-size: 0.86rem;
-      font-weight: 600;
+      font-size: 0.9rem;
+      font-weight: 700;
       cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
     }
 
-    .btn-toggle.bought {
-      background: #DCFCE7;
-      border-color: #86EFAC;
-      color: var(--success);
+    .btn-buy-toggle.is-bought {
+      background: var(--success-soft);
+      border-color: #6ee7b7;
+      color: #065f46;
     }
 
     .btn-delete {
-      min-width: 44px;
+      width: 44px;
       min-height: 44px;
-      padding: 0 12px;
-      border-radius: var(--radius-md);
-      border: 1px solid #FECACA;
-      background: #FEF2F2;
+      border-radius: 12px;
+      border: 1px solid #fecaca;
+      background: var(--danger-soft);
       color: var(--danger);
-      font-size: 0.85rem;
-      font-weight: 600;
+      font-size: 1.1rem;
       cursor: pointer;
-    }
-
-    .fab-wrap {
-      position: fixed;
-      bottom: 18px;
-      left: 0;
-      right: 0;
-      display: flex;
+      display: inline-flex;
+      align-items: center;
       justify-content: center;
-      pointer-events: none;
-      padding: 0 16px;
-      z-index: 25;
+      flex-shrink: 0;
     }
 
-    .fab-btn {
-      pointer-events: auto;
-      min-height: 52px;
-      padding: 0 24px;
-      border-radius: 16px;
-      border: none;
-      background: var(--accent);
-      color: #FFFFFF;
-      font-size: 0.96rem;
-      font-weight: 700;
-      box-shadow: var(--shadow-lg);
-      cursor: pointer;
-    }
-
+    /* Estado vacío */
     .empty-state {
       text-align: center;
       padding: 48px 20px;
       background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      color: var(--text-muted);
+      border-radius: var(--radius);
+      border: 1px dashed #cbd5e1;
+      max-width: 460px;
+      margin: 24px auto;
     }
 
-    /* ======================== MODAL / BOTTOM SHEET ======================== */
+    .empty-state-icon {
+      font-size: 2.8rem;
+      margin-bottom: 10px;
+    }
+
+    .empty-state h2 {
+      margin: 0 0 8px;
+      font-size: 1.15rem;
+    }
+
+    .empty-state p {
+      margin: 0 0 18px;
+      color: var(--text-muted);
+      font-size: 0.94rem;
+      line-height: 1.45;
+    }
+
+    /* Botón flotante (+ Añadir regalo) */
+    .fab {
+      position: fixed;
+      right: 18px;
+      bottom: calc(18px + env(safe-area-inset-bottom));
+      z-index: 40;
+      height: 56px;
+      padding: 0 22px;
+      border-radius: 999px;
+      border: none;
+      background: var(--primary);
+      color: #ffffff;
+      font-size: 1rem;
+      font-weight: 700;
+      box-shadow: 0 8px 22px rgba(79, 70, 229, 0.4);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .fab:active {
+      transform: scale(0.97);
+    }
+
+    /* ================= MODALES ================= */
     .modal-backdrop {
       position: fixed;
       inset: 0;
-      background: rgba(24, 24, 27, 0.52);
-      backdrop-filter: blur(4px);
-      z-index: 50;
+      z-index: 60;
+      background: rgba(15, 23, 42, 0.55);
       display: flex;
       align-items: flex-end;
       justify-content: center;
+      padding: 0;
     }
 
-    @media (min-width: 640px) {
-      .modal-backdrop { align-items: center; padding: 16px; }
+    @media (min-width: 600px) {
+      .modal-backdrop {
+        align-items: center;
+        padding: 20px;
+      }
     }
 
     .modal-sheet {
@@ -471,111 +605,263 @@
       overflow-y: auto;
       background: var(--surface);
       border-radius: 24px 24px 0 0;
-      padding: 20px 18px 28px;
-      box-shadow: var(--shadow-lg);
+      padding: 20px 18px calc(24px + env(safe-area-inset-bottom));
+      box-shadow: var(--shadow-md);
     }
 
-    @media (min-width: 640px) {
-      .modal-sheet { border-radius: 24px; padding: 24px; }
+    @media (min-width: 600px) {
+      .modal-sheet {
+        border-radius: 22px;
+        padding: 24px;
+      }
     }
 
     .modal-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 18px;
+      margin-bottom: 16px;
     }
 
-    .modal-title { margin: 0; font-size: 1.35rem; }
+    .modal-header h2 {
+      margin: 0;
+      font-size: 1.2rem;
+      font-weight: 800;
+    }
 
-    .field { margin-bottom: 14px; }
-    .field label {
+    .modal-close {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: none;
+      background: var(--surface-muted);
+      color: var(--text);
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-label {
       display: block;
-      font-size: 0.85rem;
-      font-weight: 600;
       margin-bottom: 6px;
+      font-size: 0.88rem;
+      font-weight: 700;
       color: var(--text);
     }
 
-    .field input, .field select {
+    .form-control {
       width: 100%;
-      min-height: 46px;
+      min-height: 48px;
+      padding: 10px 14px;
+      border-radius: 12px;
+      border: 1.5px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      font-size: 1rem;
+      outline: none;
+    }
+
+    .form-control:focus {
+      border-color: var(--primary);
+    }
+
+    .inline-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .btn-secondary {
+      min-height: 48px;
+      padding: 0 14px;
+      border-radius: 12px;
+      border: 1.5px solid var(--border);
+      background: var(--surface-muted);
+      color: var(--text);
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      width: 100%;
+      min-height: 50px;
+      padding: 12px 18px;
+      border-radius: 14px;
+      border: none;
+      background: var(--primary);
+      color: #ffffff;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .btn-danger-full {
+      width: 100%;
+      min-height: 48px;
+      border-radius: 12px;
+      border: none;
+      background: var(--danger);
+      color: #fff;
+      font-size: 0.98rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    /* Subida y previsualización de foto */
+    .upload-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 18px;
+      border: 2px dashed #cbd5e1;
+      border-radius: 14px;
+      background: var(--surface-muted);
+      cursor: pointer;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.92rem;
+      font-weight: 600;
+    }
+
+    .preview-wrap {
+      position: relative;
+      margin-top: 10px;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+
+    .preview-wrap img {
+      width: 100%;
+      max-height: 240px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .preview-remove {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      height: 34px;
+      padding: 0 12px;
+      border-radius: 999px;
+      border: none;
+      background: rgba(15, 23, 42, 0.78);
+      color: #fff;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .preview-info {
+      padding: 6px 10px;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      background: var(--surface);
+    }
+
+    /* Lista dentro de modal de personas */
+    .people-list {
+      list-style: none;
+      padding: 0;
+      margin: 16px 0 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .person-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       padding: 10px 12px;
       border-radius: 12px;
-      border: 1px solid var(--border);
-      background: var(--bg);
-      color: var(--text);
-      font-size: 0.95rem;
-    }
-
-    .upload-box {
-      border: 1.5px dashed #D4D4D8;
-      border-radius: 14px;
-      padding: 16px;
-      text-align: center;
-      background: var(--bg);
-      cursor: pointer;
-      display: block;
-    }
-
-    .preview-img {
-      width: 100%;
-      max-height: 210px;
-      object-fit: cover;
-      border-radius: 12px;
-      margin-top: 10px;
-      border: 1px solid var(--border);
-    }
-
-    .compress-info {
-      font-size: 0.78rem;
-      color: var(--success);
-      margin-top: 6px;
+      background: var(--surface-muted);
       font-weight: 600;
     }
 
-    .modal-footer {
-      display: flex;
-      gap: 10px;
-      margin-top: 18px;
-    }
-    .modal-footer > button { flex: 1; min-height: 48px; }
-
-    .config-warning {
-      background: #FEF3C7;
-      border: 1px solid #FDE68A;
-      color: #92400E;
-      padding: 12px 14px;
-      border-radius: 12px;
+    .person-del-btn {
+      height: 36px;
+      padding: 0 12px;
+      border-radius: 10px;
+      border: 1px solid #fecaca;
+      background: var(--danger-soft);
+      color: var(--danger);
       font-size: 0.84rem;
-      margin-bottom: 16px;
-      line-height: 1.45;
-      text-align: left;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    /* Visor de imagen ampliada */
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 80;
+      background: rgba(0, 0, 0, 0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .lightbox img {
+      max-width: 100%;
+      max-height: 90dvh;
+      border-radius: 12px;
+      object-fit: contain;
+    }
+
+    /* Toast de feedback */
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: calc(86px + env(safe-area-inset-bottom));
+      transform: translateX(-50%);
+      z-index: 90;
+      background: #0f172a;
+      color: #fff;
+      padding: 10px 16px;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      box-shadow: var(--shadow-md);
+      max-width: 90vw;
+      text-align: center;
     }
   </style>
 </head>
 <body>
 
-  <!-- PANTALLA DE BLOQUEO PIN -->
-  <section id="lockScreen" class="lock-screen">
+  <!-- ================= PANTALLA DE BLOQUEO ================= -->
+  <section id="lock-screen">
     <div class="lock-card">
-      <h1 class="lock-title">Regalos en Familia</h1>
-      <p class="lock-subtitle">Introduce el PIN privado de 4 dígitos para acceder a vuestra lista compartida.</p>
+      <div class="lock-icon">🎁</div>
+      <h1 class="lock-title">Lista de Regalos</h1>
+      <p class="lock-subtitle">Introduce el PIN familiar de 4 dígitos</p>
 
-      <div id="configBanner" class="config-warning hidden">
-        Falta pegar tu <strong>firebaseConfig</strong> al principio del script en <code>index.html</code>.
-      </div>
-
-      <div id="pinDots" class="pin-dots" aria-label="Indicador de PIN">
+      <div class="pin-dots" id="pin-dots" aria-label="PIN de 4 dígitos">
         <span class="pin-dot"></span>
         <span class="pin-dot"></span>
         <span class="pin-dot"></span>
         <span class="pin-dot"></span>
       </div>
 
-      <div id="pinStatus" class="pin-status">Escribe los 4 dígitos</div>
+      <p class="pin-error" id="pin-error"></p>
+      <p class="pin-status hidden" id="pin-status">Verificando PIN...</p>
 
-      <div class="keypad" role="group" aria-label="Teclado numérico">
+      <div class="keypad" id="keypad">
         <button type="button" class="key-btn" data-key="1">1</button>
         <button type="button" class="key-btn" data-key="2">2</button>
         <button type="button" class="key-btn" data-key="3">3</button>
@@ -585,121 +871,174 @@
         <button type="button" class="key-btn" data-key="7">7</button>
         <button type="button" class="key-btn" data-key="8">8</button>
         <button type="button" class="key-btn" data-key="9">9</button>
-        <button type="button" class="key-btn action" id="btnClearPin">Borrar</button>
+        <button type="button" class="key-btn key-action" id="btn-pin-clear">Borrar</button>
         <button type="button" class="key-btn" data-key="0">0</button>
-        <button type="button" class="key-btn action" id="btnBackPin" aria-label="Retroceder">⌫</button>
+        <button type="button" class="key-btn key-action" id="btn-pin-back" aria-label="Retroceder">⌫</button>
       </div>
     </div>
   </section>
 
-  <!-- APLICACIÓN PRINCIPAL -->
-  <section id="appScreen" class="hidden">
+  <!-- ================= APLICACIÓN PRINCIPAL ================= -->
+  <section id="app-screen" class="hidden">
     <header class="topbar">
       <div class="topbar-inner">
-        <h1 class="brand">Regalos en Familia</h1>
+        <div class="brand">
+          <div class="brand-icon">🎁</div>
+          <h1>Ideas de Regalos</h1>
+        </div>
         <div class="topbar-actions">
-          <button type="button" id="btnLockApp" class="btn-ghost">Bloquear</button>
+          <button type="button" class="btn-pill primary-outline" id="btn-open-people">
+            + Persona
+          </button>
+          <button type="button" class="btn-icon" id="btn-lock-app" title="Bloquear / Cambiar PIN" aria-label="Bloquear">
+            🔒
+          </button>
         </div>
       </div>
+      <nav class="tabs-bar" id="tabs-bar" aria-label="Filtrar por persona"></nav>
     </header>
 
-    <main class="container">
-      <p id="summaryLine" class="summary-line">Cargando lista…</p>
-
-      <nav class="tabs-bar" id="filterTabs" aria-label="Filtrar por persona">
-        <button type="button" class="tab-btn active" data-filter="Todos">Todos</button>
-        <button type="button" id="btnOpenPeople" class="tab-btn" style="border-style:dashed; color:var(--accent);">+ Persona</button>
-      </nav>
-
-      <div id="giftGrid" class="grid"></div>
-      <div id="emptyState" class="empty-state hidden">
-        Aún no hay ideas de regalos aquí. Pulsa «+ Persona» para crear destinatarios o «+ Añadir regalo» para empezar.
-      </div>
+    <main class="main-container">
+      <div id="gifts-grid" class="gifts-grid"></div>
+      <div id="empty-state" class="empty-state hidden"></div>
     </main>
 
-    <div class="fab-wrap">
-      <button type="button" id="btnOpenAdd" class="fab-btn">+ Añadir regalo</button>
-    </div>
+    <button type="button" class="fab" id="btn-open-add-gift">
+      + Añadir regalo
+    </button>
   </section>
 
-  <!-- MODAL GESTIONAR PERSONAS -->
-  <div id="peopleModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="peopleModalTitle">
+  <!-- ================= MODAL: AÑADIR REGALO ================= -->
+  <div id="modal-gift" class="modal-backdrop hidden" role="dialog" aria-modal="true">
     <div class="modal-sheet">
       <div class="modal-header">
-        <h2 id="peopleModalTitle" class="modal-title">Personas de tu lista</h2>
-        <button type="button" id="btnClosePeople" class="btn-ghost">Cerrar</button>
-      </div>
-      <form id="addPersonForm" style="display:flex; gap:8px; margin-bottom:14px;">
-        <input id="newPersonInput" type="text" required maxlength="60" placeholder="Ej. Laura, Abuela, Carlos…" style="flex:1; min-height:46px; padding:10px 12px; border-radius:12px; border:1px solid var(--border); background:var(--bg); font-size:0.95rem;" />
-        <button type="submit" class="btn-primary">Añadir</button>
-      </form>
-      <div id="peopleList" style="display:flex; flex-direction:column; gap:8px; max-height:240px; overflow-y:auto;"></div>
-    </div>
-  </div>
-
-  <!-- MODAL AÑADIR REGALO -->
-  <div id="addModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="addModalTitle">
-    <div class="modal-sheet">
-      <div class="modal-header">
-        <h2 id="addModalTitle" class="modal-title">Nuevo regalo</h2>
-        <button type="button" id="btnCloseAdd" class="btn-ghost">Cerrar</button>
+        <h2>Nuevo regalo</h2>
+        <button type="button" class="modal-close" data-close-modal="modal-gift" aria-label="Cerrar">✕</button>
       </div>
 
-      <form id="addGiftForm">
-        <div class="field">
-          <label for="giftMemberSelect">¿Para quién es?</label>
-          <select id="giftMemberSelect"></select>
-          <input id="giftMemberCustom" type="text" maxlength="60" placeholder="Escribe el nombre (ej. Laura, Abuela, Dani…)" class="hidden" style="margin-top:8px;" />
+      <form id="form-gift">
+        <div class="form-group">
+          <label class="form-label" for="gift-person-select">¿Para quién es?</label>
+          <div class="inline-row">
+            <select id="gift-person-select" class="form-control"></select>
+            <button type="button" class="btn-secondary" id="btn-toggle-inline-person">+ Nueva</button>
+          </div>
+          <div id="inline-person-box" class="hidden" style="margin-top: 8px;">
+            <input
+              type="text"
+              id="gift-new-person"
+              class="form-control"
+              placeholder="Nombre de la nueva persona"
+              maxlength="40"
+            />
+          </div>
         </div>
 
-        <div class="field">
-          <label for="giftName">Nombre o descripción del regalo</label>
-          <input id="giftName" type="text" required maxlength="180" placeholder="Ej. Cafetera italiana y tazas de cerámica" />
+        <div class="form-group">
+          <label class="form-label" for="gift-title">Nombre / Descripción del regalo *</label>
+          <input
+            type="text"
+            id="gift-title"
+            class="form-control"
+            placeholder="Ej: Cafetera italiana, LEGO, libro..."
+            maxlength="120"
+            required
+          />
         </div>
 
-        <div class="field">
-          <label for="giftPrice">Precio estimado (€) (opcional)</label>
-          <input id="giftPrice" type="number" step="0.01" min="0" placeholder="Ej. 45.00" />
+        <div class="form-group">
+          <label class="form-label" for="gift-price">Precio estimado (opcional)</label>
+          <input
+            type="number"
+            id="gift-price"
+            class="form-control"
+            placeholder="Ej: 29.95"
+            step="0.01"
+            min="0"
+            inputmode="decimal"
+          />
         </div>
 
-        <div class="field">
-          <label for="giftUrl">Enlace a la tienda (opcional)</label>
-          <input id="giftUrl" type="url" placeholder="https://tienda.com/producto" />
-        </div>
-
-        <div class="field">
-          <label>Foto del regalo (galería o cámara)</label>
-          <label class="upload-box" for="giftPhotoInput">
-            Pulsa aquí para elegir foto o abrir la cámara
-            <input id="giftPhotoInput" type="file" accept="image/*" class="hidden" />
+        <div class="form-group">
+          <label class="form-label" for="gift-photo-input">Foto desde galería o cámara (opcional)</label>
+          <label class="upload-box" for="gift-photo-input">
+            <span style="font-size: 1.5rem;">📷</span>
+            <span>Toca para elegir foto o hacer una</span>
           </label>
-          <img id="photoPreview" class="preview-img hidden" alt="Previsualización del regalo" />
-          <div id="compressInfo" class="compress-info hidden"></div>
+          <input type="file" id="gift-photo-input" accept="image/*" class="hidden" />
+          <div id="photo-preview-wrap" class="preview-wrap hidden">
+            <img id="photo-preview-img" alt="Vista previa del regalo" />
+            <button type="button" class="preview-remove" id="btn-remove-photo">Quitar</button>
+            <div class="preview-info" id="photo-preview-info"></div>
+          </div>
         </div>
 
-        <div id="formError" class="pin-status error hidden" style="margin-bottom:8px;"></div>
-
-        <div class="modal-footer">
-          <button type="button" id="btnCancelAdd" class="btn-ghost">Cancelar</button>
-          <button type="submit" id="btnSaveGift" class="btn-primary">Guardar regalo</button>
+        <div class="form-group">
+          <label class="form-label" for="gift-link">Enlace a la tienda (opcional)</label>
+          <input
+            type="url"
+            id="gift-link"
+            class="form-control"
+            placeholder="https://..."
+            inputmode="url"
+          />
         </div>
+
+        <button type="submit" class="btn-primary" id="btn-save-gift">
+          Guardar regalo
+        </button>
       </form>
     </div>
   </div>
 
-  <!-- MODAL CONFIRMAR ELIMINACIÓN -->
-  <div id="deleteModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="deleteModalTitle">
+  <!-- ================= MODAL: GESTIONAR PERSONAS ================= -->
+  <div id="modal-people" class="modal-backdrop hidden" role="dialog" aria-modal="true">
     <div class="modal-sheet">
       <div class="modal-header">
-        <h2 id="deleteModalTitle" class="modal-title">Eliminar regalo</h2>
+        <h2>Personas</h2>
+        <button type="button" class="modal-close" data-close-modal="modal-people" aria-label="Cerrar">✕</button>
       </div>
-      <p id="deleteConfirmText" style="margin:0 0 18px; color:var(--text-muted); line-height:1.45;"></p>
-      <div class="modal-footer">
-        <button type="button" id="btnCancelDelete" class="btn-ghost">Cancelar</button>
-        <button type="button" id="btnConfirmDelete" class="btn-delete" style="flex:1; min-height:48px;">Sí, eliminar</button>
+
+      <form id="form-person" class="inline-row">
+        <input
+          type="text"
+          id="person-name-input"
+          class="form-control"
+          placeholder="Nombre de la persona..."
+          maxlength="40"
+          required
+        />
+        <button type="submit" class="btn-primary" style="width: auto; min-width: 96px;">
+          Añadir
+        </button>
+      </form>
+
+      <ul id="people-list" class="people-list"></ul>
+      <p id="people-empty-msg" style="color: var(--text-muted); font-size: 0.9rem; margin-top: 14px;"></p>
+    </div>
+  </div>
+
+  <!-- ================= MODAL: CONFIRMACIÓN DE BORRADO ================= -->
+  <div id="modal-confirm" class="modal-backdrop hidden" role="dialog" aria-modal="true">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <h2 id="confirm-title">Confirmar eliminación</h2>
+        <button type="button" class="modal-close" data-close-modal="modal-confirm" aria-label="Cerrar">✕</button>
+      </div>
+      <p id="confirm-message" style="margin: 0 0 18px; color: var(--text-muted); line-height: 1.45;"></p>
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <button type="button" class="btn-danger-full" id="btn-confirm-yes">Sí, eliminar</button>
+        <button type="button" class="btn-secondary" data-close-modal="modal-confirm">Cancelar</button>
       </div>
     </div>
   </div>
+
+  <!-- ================= VISOR DE FOTO AMPLIADA ================= -->
+  <div id="lightbox" class="lightbox hidden" role="dialog" aria-modal="true">
+    <img id="lightbox-img" alt="Foto ampliada" />
+  </div>
+
+  <div id="toast" class="toast hidden"></div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
@@ -707,20 +1046,20 @@
     import {
       getFirestore,
       collection,
+      addDoc,
+      deleteDoc,
+      updateDoc,
+      doc,
+      onSnapshot,
       query,
       orderBy,
-      limit,
       getDocs,
-      onSnapshot,
-      addDoc,
-      updateDoc,
-      deleteDoc,
-      doc
+      limit
     } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 
     // =========================================================================
-    // CONFIGURACIÓN DE FIREBASE — PEGA AQUÍ TUS CLAVES DE FIREBASE CONSOLE
-    // (El PIN secreto NUNCA debe escribirse en este archivo)
+    // CONFIGURACIÓN DE FIREBASE (PEGA AQUÍ TUS CLAVES PÚBLICAS DE FIREBASE)
+    // NO ESCRIBAS NINGÚN PIN SECRETO EN ESTE ARCHIVO
     // =========================================================================
     const firebaseConfig = {
       apiKey: "AIzaSyAfOJA_RO3wiLJQ_wR7gCyDH4jCbpZJkpo",
@@ -730,534 +1069,857 @@
       messagingSenderId: "391994539931",
       appId: "1:391994539931:web:b2648a8b730681845b6b3e"
     };
+    // =========================================================================
 
-    const STORAGE_PIN_KEY = "regalos_familia_pin_v1";
-
-    const isConfigMissing = !firebaseConfig.apiKey || firebaseConfig.apiKey.startsWith("TU_");
-    if (isConfigMissing) {
-      document.getElementById("configBanner").classList.remove("hidden");
-    }
+    const STORAGE_PIN_KEY = "regalos_familiares_pin";
+    const isConfigPending = Object.values(firebaseConfig).some((v) => String(v).startsWith("TU_"));
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    let currentPin = "";
-    let enteredDigits = "";
-    let isVerifyingPin = false;
-    let activeFilter = "Todos";
-    let items = [];
-    let peopleDocs = [];
-    let unsubscribeSnapshot = null;
-    let unsubscribePeople = null;
-    let compressedPhotoBlob = null;
+    // Estado en memoria
+    let enteredPin = "";
+    let activePin = null;
+    let isVerifying = false;
+    let people = [];
+    let gifts = [];
+    let selectedPersonFilter = "ALL"; // "ALL" o id de persona
+    let unsubPeople = null;
+    let unsubGifts = null;
     let compressedPhotoDataUrl = "";
-    let pendingDeleteItem = null;
+    let pendingConfirmAction = null;
 
-    const lockScreen = document.getElementById("lockScreen");
-    const appScreen = document.getElementById("appScreen");
-    const pinDots = Array.from(document.querySelectorAll("#pinDots .pin-dot"));
-    const pinDotsContainer = document.getElementById("pinDots");
-    const pinStatus = document.getElementById("pinStatus");
-    const giftGrid = document.getElementById("giftGrid");
-    const emptyState = document.getElementById("emptyState");
-    const summaryLine = document.getElementById("summaryLine");
-    const filterTabsEl = document.getElementById("filterTabs");
+    // Referencias DOM
+    const lockScreen = document.getElementById("lock-screen");
+    const appScreen = document.getElementById("app-screen");
+    const pinDotsWrap = document.getElementById("pin-dots");
+    const pinDots = Array.from(pinDotsWrap.querySelectorAll(".pin-dot"));
+    const pinError = document.getElementById("pin-error");
+    const pinStatus = document.getElementById("pin-status");
+    const keypad = document.getElementById("keypad");
 
-    function renderDots() {
+    const tabsBar = document.getElementById("tabs-bar");
+    const giftsGrid = document.getElementById("gifts-grid");
+    const emptyState = document.getElementById("empty-state");
+
+    const modalGift = document.getElementById("modal-gift");
+    const formGift = document.getElementById("form-gift");
+    const giftPersonSelect = document.getElementById("gift-person-select");
+    const btnToggleInlinePerson = document.getElementById("btn-toggle-inline-person");
+    const inlinePersonBox = document.getElementById("inline-person-box");
+    const giftNewPersonInput = document.getElementById("gift-new-person");
+    const giftTitleInput = document.getElementById("gift-title");
+    const giftPriceInput = document.getElementById("gift-price");
+    const giftPhotoInput = document.getElementById("gift-photo-input");
+    const photoPreviewWrap = document.getElementById("photo-preview-wrap");
+    const photoPreviewImg = document.getElementById("photo-preview-img");
+    const photoPreviewInfo = document.getElementById("photo-preview-info");
+    const giftLinkInput = document.getElementById("gift-link");
+    const btnSaveGift = document.getElementById("btn-save-gift");
+
+    const modalPeople = document.getElementById("modal-people");
+    const formPerson = document.getElementById("form-person");
+    const personNameInput = document.getElementById("person-name-input");
+    const peopleListEl = document.getElementById("people-list");
+    const peopleEmptyMsg = document.getElementById("people-empty-msg");
+
+    const modalConfirm = document.getElementById("modal-confirm");
+    const confirmTitle = document.getElementById("confirm-title");
+    const confirmMessage = document.getElementById("confirm-message");
+    const btnConfirmYes = document.getElementById("btn-confirm-yes");
+
+    const lightbox = document.getElementById("lightbox");
+    const lightboxImg = document.getElementById("lightbox-img");
+    const toastEl = document.getElementById("toast");
+
+    // ================= UTILIDADES =================
+    let toastTimer = null;
+    function showToast(msg) {
+      toastEl.textContent = msg;
+      toastEl.classList.remove("hidden");
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toastEl.classList.add("hidden"), 2600);
+    }
+
+    // Firestore guarda createdAt como número en las reglas actuales
+    function toMillis(value) {
+      if (typeof value === "number") return value;
+      if (value && typeof value.toMillis === "function") return value.toMillis();
+      if (value && typeof value.seconds === "number") return value.seconds * 1000;
+      return 0;
+    }
+
+    function openModal(el) {
+      el.classList.remove("hidden");
+    }
+
+    function closeModal(el) {
+      el.classList.add("hidden");
+    }
+
+    function sanitizeUrl(rawUrl) {
+      const trimmed = (rawUrl || "").trim();
+      if (!trimmed) return "";
+      const withProtocol = /^https?:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`;
+      try {
+        const parsed = new URL(withProtocol);
+        if (parsed.protocol === "http:" || parsed.protocol === "https:") {
+          return parsed.href;
+        }
+      } catch (_) {}
+      return "";
+    }
+
+    function formatPrice(value) {
+      if (value === null || value === undefined || value === "") return "";
+      const num = Number(value);
+      if (Number.isNaN(num)) return "";
+      return `${num.toLocaleString("es-ES", { minimumFractionDigits: 0, maximumFractionDigits: 2 })} €`;
+    }
+
+    // Las reglas de Firestore permiten imageUrl de hasta 550000 caracteres
+    const MAX_IMAGE_DATAURL_LENGTH = 540000;
+
+    // Compresión de imagen en cliente con Canvas para guardar en Firestore (< 550 KB)
+    function compressImage(file) {
+      return new Promise((resolve, reject) => {
+        const objectUrl = URL.createObjectURL(file);
+        const img = new Image();
+        img.onload = () => {
+          URL.revokeObjectURL(objectUrl);
+          const renderAttempt = (maxWidth, quality) => {
+            let width = img.naturalWidth || img.width;
+            let height = img.naturalHeight || img.height;
+
+            if (width > maxWidth) {
+              height = Math.round(height * (maxWidth / width));
+              width = maxWidth;
+            }
+
+            const canvas = document.createElement("canvas");
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext("2d");
+            ctx.fillStyle = "#ffffff";
+            ctx.fillRect(0, 0, width, height);
+            ctx.drawImage(img, 0, 0, width, height);
+
+            const dataUrl = canvas.toDataURL("image/jpeg", quality);
+            return { dataUrl, width, height };
+          };
+
+          const attempts = [
+            [800, 0.7],
+            [700, 0.6],
+            [600, 0.55],
+            [520, 0.45],
+            [420, 0.4],
+            [320, 0.35]
+          ];
+
+          let result = null;
+          for (const [maxWidth, quality] of attempts) {
+            result = renderAttempt(maxWidth, quality);
+            if (result.dataUrl.length <= MAX_IMAGE_DATAURL_LENGTH) break;
+          }
+
+          if (!result || result.dataUrl.length > MAX_IMAGE_DATAURL_LENGTH) {
+            reject(new Error("La imagen es demasiado pesada, prueba con otra foto"));
+            return;
+          }
+
+          const approxBytes = Math.round((result.dataUrl.length - result.dataUrl.indexOf(",") - 1) * 0.75);
+          resolve({ ...result, byteSize: approxBytes });
+        };
+        img.onerror = () => {
+          URL.revokeObjectURL(objectUrl);
+          reject(new Error("El archivo no es una imagen válida"));
+        };
+        img.src = objectUrl;
+      });
+    }
+
+    // ================= LÓGICA DE PIN Y ACCESO =================
+    function renderPinDots() {
       pinDots.forEach((dot, idx) => {
-        dot.classList.toggle("filled", idx < enteredDigits.length);
+        dot.classList.toggle("filled", idx < enteredPin.length);
       });
     }
 
-    function setPinStatus(msg, isError = false) {
-      pinStatus.textContent = msg;
-      pinStatus.classList.toggle("error", isError);
+    function setVerifyingState(loading) {
+      isVerifying = loading;
+      pinStatus.classList.toggle("hidden", !loading);
+      keypad.querySelectorAll("button").forEach((b) => {
+        b.disabled = loading;
+      });
     }
 
-    function setKeypadDisabled(disabled) {
-      document.querySelectorAll(".key-btn").forEach((btn) => {
-        btn.disabled = disabled;
-      });
+    function triggerPinError(message) {
+      enteredPin = "";
+      renderPinDots();
+      pinError.textContent = message;
+      pinDotsWrap.classList.remove("shake");
+      void pinDotsWrap.offsetWidth; // Reiniciar animación
+      pinDotsWrap.classList.add("shake");
     }
 
     async function verifyAndUnlock(pin) {
-      if (isVerifyingPin) return;
-      isVerifyingPin = true;
-      setKeypadDisabled(true);
-      setPinStatus("Comprobando PIN con Firebase…");
+      if (isConfigPending) {
+        triggerPinError("Configura primero firebaseConfig en index.html");
+        return;
+      }
+
+      setVerifyingState(true);
+      pinError.textContent = "";
 
       try {
-        await signInAnonymously(auth);
-        const itemsRef = collection(db, "listas_regalos", pin, "items");
-        await getDocs(query(itemsRef, limit(1)));
+        if (!auth.currentUser) {
+          await signInAnonymously(auth);
+        }
 
-        currentPin = pin;
+        // Intentar leer la ruta protegida por reglas de Firebase
+        await getDocs(query(collection(db, "listas_regalos", pin, "items"), limit(1)));
+
+        // Si Firebase permitió la lectura, el PIN es correcto
+        activePin = pin;
         localStorage.setItem(STORAGE_PIN_KEY, pin);
-        lockScreen.classList.add("hidden");
-        appScreen.classList.remove("hidden");
-        startRealtimeListener(pin);
-      } catch (err) {
-        console.error(err);
+        enterApp();
+      } catch (error) {
         localStorage.removeItem(STORAGE_PIN_KEY);
-        enteredDigits = "";
-        renderDots();
-        pinDotsContainer.classList.remove("shake");
-        void pinDotsContainer.offsetWidth;
-        pinDotsContainer.classList.add("shake");
-
-        const code = err && err.code ? String(err.code) : "";
-        if (code.includes("permission-denied")) {
-          setPinStatus("PIN incorrecto. Inténtalo de nuevo.", true);
-        } else if (isConfigMissing) {
-          setPinStatus("Configura primero firebaseConfig en index.html.", true);
+        if (error && (error.code === "permission-denied" || String(error.message).includes("permissions"))) {
+          triggerPinError("PIN incorrecto. Inténtalo de nuevo.");
         } else {
-          setPinStatus("No se pudo conectar con Firebase (" + (code || "error") + ").", true);
+          console.error(error);
+          triggerPinError("Error de conexión con Firebase.");
         }
       } finally {
-        isVerifyingPin = false;
-        setKeypadDisabled(false);
+        setVerifyingState(false);
       }
     }
 
     function handleDigit(digit) {
-      if (isVerifyingPin || enteredDigits.length >= 4) return;
-      enteredDigits += digit;
-      renderDots();
-      setPinStatus("Escribe los 4 dígitos");
-      if (enteredDigits.length === 4) {
-        verifyAndUnlock(enteredDigits);
+      if (isVerifying || enteredPin.length >= 4) return;
+      pinError.textContent = "";
+      enteredPin += digit;
+      renderPinDots();
+      if (enteredPin.length === 4) {
+        verifyAndUnlock(enteredPin);
       }
     }
 
-    document.querySelectorAll(".key-btn[data-key]").forEach((btn) => {
-      btn.addEventListener("click", () => handleDigit(btn.dataset.key));
-    });
-
-    document.getElementById("btnClearPin").addEventListener("click", () => {
-      if (isVerifyingPin) return;
-      enteredDigits = "";
-      renderDots();
-      setPinStatus("Escribe los 4 dígitos");
-    });
-
-    document.getElementById("btnBackPin").addEventListener("click", () => {
-      if (isVerifyingPin) return;
-      enteredDigits = enteredDigits.slice(0, -1);
-      renderDots();
-    });
-
-    document.addEventListener("keydown", (e) => {
-      if (lockScreen.classList.contains("hidden")) return;
-      if (/^[0-9]$/.test(e.key)) handleDigit(e.key);
-      if (e.key === "Backspace") {
-        enteredDigits = enteredDigits.slice(0, -1);
-        renderDots();
-      }
-    });
-
-    function getAllPeopleNames() {
-      const set = new Set(peopleDocs.map((p) => p.name));
-      items.forEach((it) => { if (it.familyMember) set.add(it.familyMember); });
-      return Array.from(set);
-    }
-
-    function renderFilterTabs() {
-      const names = getAllPeopleNames();
-      if (activeFilter !== "Todos" && !names.includes(activeFilter)) {
-        activeFilter = "Todos";
-      }
-      const tabsHtml = ['Todos', ...names].map((name) => {
-        const isActive = activeFilter === name;
-        return '<button type="button" class="tab-btn ' + (isActive ? 'active' : '') + '" data-filter="' + escapeHtml(name) + '">' + escapeHtml(name) + '</button>';
-      }).join("");
-      filterTabsEl.innerHTML = tabsHtml +
-        '<button type="button" id="btnOpenPeople" class="tab-btn" style="border-style:dashed; color:var(--accent);">+ Persona</button>';
-    }
-
-    function renderPeopleModalList() {
-      const listEl = document.getElementById("peopleList");
-      if (!listEl) return;
-      if (peopleDocs.length === 0) {
-        listEl.innerHTML = '<p style="text-align:center; color:var(--text-muted); font-size:0.88rem; margin:12px 0;">Aún no has añadido personas.</p>';
-        return;
-      }
-      listEl.innerHTML = peopleDocs.map((p) => (
-        '<div style="display:flex; align-items:center; justify-content:space-between; padding:8px 10px; border:1px solid var(--border); border-radius:12px;">' +
-          '<span style="font-weight:600; font-size:0.92rem;">' + escapeHtml(p.name) + '</span>' +
-          '<button type="button" class="btn-delete" data-del-person="' + escapeHtml(p.id) + '" style="min-height:36px; padding:0 10px;">Quitar</button>' +
-        '</div>'
-      )).join("");
-    }
-
-    function startRealtimeListener(pin) {
-      if (unsubscribeSnapshot) unsubscribeSnapshot();
-      if (unsubscribePeople) unsubscribePeople();
-
-      const qItems = query(collection(db, "listas_regalos", pin, "items"), orderBy("createdAt", "desc"));
-      unsubscribeSnapshot = onSnapshot(qItems, (snapshot) => {
-        items = snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
-        renderFilterTabs();
-        renderGifts();
-      }, (err) => {
-        console.error(err);
-        if (String(err.code || "").includes("permission-denied")) lockOut();
-      });
-
-      const qPeople = query(collection(db, "listas_regalos", pin, "personas"), orderBy("createdAt", "asc"));
-      unsubscribePeople = onSnapshot(qPeople, (snapshot) => {
-        peopleDocs = snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
-        renderFilterTabs();
-        renderPeopleModalList();
-      });
-    }
-
-    function lockOut() {
-      if (unsubscribeSnapshot) { unsubscribeSnapshot(); unsubscribeSnapshot = null; }
-      if (unsubscribePeople) { unsubscribePeople(); unsubscribePeople = null; }
+    function lockApp() {
+      if (unsubPeople) { unsubPeople(); unsubPeople = null; }
+      if (unsubGifts) { unsubGifts(); unsubGifts = null; }
+      activePin = null;
+      people = [];
+      gifts = [];
+      selectedPersonFilter = "ALL";
       localStorage.removeItem(STORAGE_PIN_KEY);
-      currentPin = "";
-      enteredDigits = "";
-      items = [];
-      peopleDocs = [];
-      renderDots();
-      setPinStatus("Sesión cerrada. Introduce el PIN.");
+      enteredPin = "";
+      renderPinDots();
+      pinError.textContent = "";
       appScreen.classList.add("hidden");
       lockScreen.classList.remove("hidden");
     }
 
-    document.getElementById("btnLockApp").addEventListener("click", lockOut);
-
-    const peopleModal = document.getElementById("peopleModal");
-    filterTabsEl.addEventListener("click", (e) => {
-      if (e.target.closest("#btnOpenPeople")) {
-        renderPeopleModalList();
-        peopleModal.classList.remove("hidden");
-        return;
+    keypad.addEventListener("click", (e) => {
+      const btn = e.target.closest("button");
+      if (!btn || isVerifying) return;
+      const digit = btn.dataset.key;
+      if (digit !== undefined) {
+        handleDigit(digit);
       }
-      const tab = e.target.closest("[data-filter]");
-      if (!tab) return;
-      activeFilter = tab.dataset.filter;
-      renderFilterTabs();
-      renderGifts();
     });
 
-    document.getElementById("btnClosePeople").addEventListener("click", () => {
-      peopleModal.classList.add("hidden");
+    document.getElementById("btn-pin-clear").addEventListener("click", () => {
+      if (isVerifying) return;
+      enteredPin = "";
+      pinError.textContent = "";
+      renderPinDots();
     });
 
-    document.getElementById("addPersonForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const input = document.getElementById("newPersonInput");
-      const name = input.value.trim();
-      if (!name) return;
-      const exists = peopleDocs.some((p) => p.name.toLowerCase() === name.toLowerCase());
-      if (!exists) {
-        await addDoc(collection(db, "listas_regalos", currentPin, "personas"), {
-          name,
-          createdAt: Date.now()
-        });
+    document.getElementById("btn-pin-back").addEventListener("click", () => {
+      if (isVerifying || enteredPin.length === 0) return;
+      enteredPin = enteredPin.slice(0, -1);
+      pinError.textContent = "";
+      renderPinDots();
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (lockScreen.classList.contains("hidden") || isVerifying) return;
+      if (/^[0-9]$/.test(e.key)) {
+        handleDigit(e.key);
+      } else if (e.key === "Backspace") {
+        enteredPin = enteredPin.slice(0, -1);
+        renderPinDots();
+      } else if (e.key === "Escape") {
+        enteredPin = "";
+        renderPinDots();
       }
-      input.value = "";
     });
 
-    document.getElementById("peopleList").addEventListener("click", async (e) => {
-      const btn = e.target.closest("[data-del-person]");
-      if (!btn) return;
-      await deleteDoc(doc(db, "listas_regalos", currentPin, "personas", btn.dataset.delPerson));
-    });
+    document.getElementById("btn-lock-app").addEventListener("click", lockApp);
 
-    function escapeHtml(str) {
-      const div = document.createElement("div");
-      div.textContent = str ?? "";
-      return div.innerHTML;
+    // ================= SINCRONIZACIÓN EN TIEMPO REAL =================
+    function enterApp() {
+      lockScreen.classList.add("hidden");
+      appScreen.classList.remove("hidden");
+      subscribeRealtime();
     }
 
-    function renderGifts() {
-      const filtered = items
-        .filter((item) => activeFilter === "Todos" || item.familyMember === activeFilter)
-        .sort((a, b) => {
-          if (Boolean(a.purchased) !== Boolean(b.purchased)) {
-            return a.purchased ? 1 : -1;
+    function subscribeRealtime() {
+      if (unsubPeople) unsubPeople();
+      if (unsubGifts) unsubGifts();
+
+      const peopleQuery = query(
+        collection(db, "listas_regalos", activePin, "personas"),
+        orderBy("createdAt", "asc")
+      );
+
+      unsubPeople = onSnapshot(
+        peopleQuery,
+        (snapshot) => {
+          people = snapshot.docs
+            .map((d) => {
+              const data = d.data();
+              return { id: d.id, ...data, nombre: data.nombre ?? data.name ?? "" };
+            })
+            .filter((p) => p.nombre);
+          if (selectedPersonFilter !== "ALL" && !people.some((p) => p.id === selectedPersonFilter)) {
+            selectedPersonFilter = "ALL";
           }
-          return (b.createdAt || 0) - (a.createdAt || 0);
+          renderTabs();
+          renderGifts();
+          renderPeopleModalList();
+          refreshGiftPersonSelect();
+        },
+        (err) => {
+          console.error(err);
+          if (err.code === "permission-denied") {
+            lockApp();
+            triggerPinError("Sesión caducada o PIN modificado.");
+          }
+        }
+      );
+
+      const giftsQuery = query(
+        collection(db, "listas_regalos", activePin, "items"),
+        orderBy("createdAt", "desc")
+      );
+
+      unsubGifts = onSnapshot(
+        giftsQuery,
+        (snapshot) => {
+          // Compatibilidad: acepta documentos nuevos y los creados por la versión "Regalos en Familia"
+          gifts = snapshot.docs.map((d) => {
+            const data = d.data();
+            return {
+              id: d.id,
+              ...data,
+              nombre: data.nombre ?? data.name ?? "",
+              precio: data.precio ?? data.price ?? null,
+              fotoUrl: data.fotoUrl ?? data.imageUrl ?? "",
+              enlace: data.enlace ?? data.storeUrl ?? "",
+              comprado: data.comprado ?? data.purchased ?? false,
+              personaId: data.personaId ?? "",
+              personaNombre: data.personaNombre ?? data.familyMember ?? ""
+            };
+          });
+          renderTabs();
+          renderGifts();
+        },
+        (err) => {
+          console.error(err);
+          if (err.code === "permission-denied") {
+            lockApp();
+            triggerPinError("Sesión caducada o PIN modificado.");
+          }
+        }
+      );
+    }
+
+    // ================= RENDERIZADO DE PESTAÑAS Y PERSONAS =================
+    function giftMatchesPerson(gift, personId) {
+      const person = people.find((p) => p.id === personId);
+      if (!person) return false;
+      if (gift.personaId) return gift.personaId === person.id;
+      // Regalos antiguos sin personaId: se emparejan por nombre
+      return (gift.personaNombre || "").toLowerCase() === person.nombre.toLowerCase();
+    }
+
+    function renderTabs() {
+      tabsBar.innerHTML = "";
+
+      const allBtn = document.createElement("button");
+      allBtn.type = "button";
+      allBtn.className = `tab-btn${selectedPersonFilter === "ALL" ? " active" : ""}`;
+      allBtn.textContent = "Todos ";
+      const allCount = document.createElement("span");
+      allCount.className = "tab-count";
+      allCount.textContent = `(${gifts.length})`;
+      allBtn.appendChild(allCount);
+      allBtn.addEventListener("click", () => {
+        selectedPersonFilter = "ALL";
+        renderTabs();
+        renderGifts();
+      });
+      tabsBar.appendChild(allBtn);
+
+      people.forEach((person) => {
+        const count = gifts.filter((g) => giftMatchesPerson(g, person.id)).length;
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = `tab-btn${selectedPersonFilter === person.id ? " active" : ""}`;
+        btn.textContent = `${person.nombre} `;
+        const countSpan = document.createElement("span");
+        countSpan.className = "tab-count";
+        countSpan.textContent = `(${count})`;
+        btn.appendChild(countSpan);
+        btn.addEventListener("click", () => {
+          selectedPersonFilter = person.id;
+          renderTabs();
+          renderGifts();
+        });
+        tabsBar.appendChild(btn);
+      });
+    }
+
+    function renderPeopleModalList() {
+      peopleListEl.innerHTML = "";
+      if (people.length === 0) {
+        peopleEmptyMsg.textContent = "Todavía no hay personas añadidas. Crea la primera arriba.";
+        return;
+      }
+      peopleEmptyMsg.textContent = "";
+
+      people.forEach((person) => {
+        const li = document.createElement("li");
+        li.className = "person-item";
+
+        const nameSpan = document.createElement("span");
+        nameSpan.textContent = person.nombre;
+
+        const delBtn = document.createElement("button");
+        delBtn.type = "button";
+        delBtn.className = "person-del-btn";
+        delBtn.textContent = "Eliminar";
+        delBtn.addEventListener("click", () => {
+          askConfirm(
+            "Eliminar persona",
+            `¿Quieres eliminar a "${person.nombre}" de la lista de personas? Sus regalos guardados seguirán viéndose en "Todos".`,
+            async () => {
+              await deleteDoc(doc(db, "listas_regalos", activePin, "personas", person.id));
+              showToast("Persona eliminada");
+            }
+          );
         });
 
-      const boughtCount = filtered.filter((i) => i.purchased).length;
-      summaryLine.textContent = filtered.length + " ideas · " + boughtCount + " comprados";
+        li.appendChild(nameSpan);
+        li.appendChild(delBtn);
+        peopleListEl.appendChild(li);
+      });
+    }
+
+    function refreshGiftPersonSelect(preferredId = null) {
+      const currentVal = preferredId || giftPersonSelect.value;
+      giftPersonSelect.innerHTML = "";
+
+      if (people.length === 0) {
+        const opt = document.createElement("option");
+        opt.value = "";
+        opt.textContent = "Sin personas aún — añade una nueva";
+        giftPersonSelect.appendChild(opt);
+        inlinePersonBox.classList.remove("hidden");
+      } else {
+        const placeholder = document.createElement("option");
+        placeholder.value = "";
+        placeholder.textContent = "Selecciona una persona...";
+        giftPersonSelect.appendChild(placeholder);
+
+        people.forEach((person) => {
+          const opt = document.createElement("option");
+          opt.value = person.id;
+          opt.textContent = person.nombre;
+          giftPersonSelect.appendChild(opt);
+        });
+
+        if (currentVal && people.some((p) => p.id === currentVal)) {
+          giftPersonSelect.value = currentVal;
+        } else if (selectedPersonFilter !== "ALL" && people.some((p) => p.id === selectedPersonFilter)) {
+          giftPersonSelect.value = selectedPersonFilter;
+        }
+      }
+    }
+
+    async function ensurePersonExists(name) {
+      const cleanName = name.trim();
+      const existing = people.find(
+        (p) => p.nombre.toLowerCase() === cleanName.toLowerCase()
+      );
+      if (existing) return existing;
+
+      // Los nombres de campo deben coincidir con las reglas de Firestore
+      const docRef = await addDoc(collection(db, "listas_regalos", activePin, "personas"), {
+        name: cleanName,
+        createdAt: Date.now()
+      });
+      return { id: docRef.id, nombre: cleanName };
+    }
+
+    // ================= RENDERIZADO DE TARJETAS DE REGALO =================
+    function renderGifts() {
+      giftsGrid.innerHTML = "";
+
+      const filtered = selectedPersonFilter === "ALL"
+        ? [...gifts]
+        : gifts.filter((g) => giftMatchesPerson(g, selectedPersonFilter));
+
+      // No comprados primero; comprados al final
+      filtered.sort((a, b) => {
+        if (Boolean(a.comprado) !== Boolean(b.comprado)) {
+          return a.comprado ? 1 : -1;
+        }
+        const tA = toMillis(a.createdAt);
+        const tB = toMillis(b.createdAt);
+        return tB - tA;
+      });
 
       if (filtered.length === 0) {
-        giftGrid.innerHTML = "";
         emptyState.classList.remove("hidden");
+        emptyState.innerHTML = "";
+        const icon = document.createElement("div");
+        icon.className = "empty-state-icon";
+        icon.textContent = people.length === 0 ? "👨‍👩‍👧‍👦" : "🎁";
+
+        const h2 = document.createElement("h2");
+        h2.textContent = people.length === 0
+          ? "Empezad creando vuestra lista"
+          : "No hay ideas de regalo aquí";
+
+        const p = document.createElement("p");
+        p.textContent = people.length === 0
+          ? "Añade una persona con el botón \"+ Persona\" o pulsa \"+ Añadir regalo\" para guardar la primera idea."
+          : "Pulsa \"+ Añadir regalo\" para guardar una nueva idea y compartirla al instante.";
+
+        emptyState.appendChild(icon);
+        emptyState.appendChild(h2);
+        emptyState.appendChild(p);
         return;
       }
 
       emptyState.classList.add("hidden");
-      giftGrid.innerHTML = filtered.map((item) => {
-        const hasPrice = typeof item.price === "number" && !Number.isNaN(item.price);
-        const priceHtml = hasPrice
-          ? '<div class="gift-price">' + item.price.toLocaleString("es-ES", { style: "currency", currency: "EUR" }) + '</div>'
-          : "";
-        const mediaHtml = item.imageUrl
-          ? '<img src="' + escapeHtml(item.imageUrl) + '" alt="' + escapeHtml(item.name) + '" loading="lazy" />'
-          : '<span>Sin foto adjunta</span>';
-        const storeHtml = item.storeUrl
-          ? '<a class="btn-link" href="' + escapeHtml(item.storeUrl) + '" target="_blank" rel="noopener noreferrer">Abrir enlace de tienda ↗</a>'
-          : "";
 
-        return (
-          '<article class="gift-card ' + (item.purchased ? "purchased" : "") + '">' +
-            '<div class="gift-media">' + mediaHtml + '</div>' +
-            '<div class="gift-body">' +
-              '<div class="gift-meta">' +
-                '<span>' + escapeHtml(item.familyMember) + '</span>' +
-                '<span aria-hidden="true">·</span>' +
-                '<span class="' + (item.purchased ? "status-bought" : "") + '">' + (item.purchased ? "Comprado ✓" : "Pendiente") + '</span>' +
-              '</div>' +
-              '<h2 class="gift-title">' + escapeHtml(item.name) + '</h2>' +
-              priceHtml +
-              '<div class="gift-actions">' +
-                storeHtml +
-                '<div class="gift-actions-row">' +
-                  '<button type="button" class="btn-toggle ' + (item.purchased ? "bought" : "") + '" data-toggle="' + escapeHtml(item.id) + '">' +
-                    (item.purchased ? "Comprado ✓" : "Marcar como Comprado") +
-                  '</button>' +
-                  '<button type="button" class="btn-delete" data-del="' + escapeHtml(item.id) + '" aria-label="Eliminar regalo">Eliminar</button>' +
-                '</div>' +
-              '</div>' +
-            '</div>' +
-          '</article>'
-        );
-      }).join("");
-    }
+      filtered.forEach((item) => {
+        const card = document.createElement("article");
+        card.className = `gift-card${item.comprado ? " purchased" : ""}`;
 
-    giftGrid.addEventListener("click", async (e) => {
-      const toggleBtn = e.target.closest("[data-toggle]");
-      if (toggleBtn) {
-        const id = toggleBtn.dataset.toggle;
-        const target = items.find((i) => i.id === id);
-        if (!target) return;
-        await updateDoc(doc(db, "listas_regalos", currentPin, "items", id), {
-          purchased: !target.purchased
+        // Foto superior
+        const photoWrap = document.createElement("div");
+        photoWrap.className = "gift-photo-wrap";
+
+        if (item.fotoUrl) {
+          const img = document.createElement("img");
+          img.className = "gift-photo";
+          img.src = item.fotoUrl;
+          img.alt = item.nombre || "Foto del regalo";
+          img.loading = "lazy";
+          img.addEventListener("click", () => {
+            lightboxImg.src = item.fotoUrl;
+            openModal(lightbox);
+          });
+          photoWrap.appendChild(img);
+        } else {
+          const ph = document.createElement("div");
+          ph.className = "gift-photo-placeholder";
+          ph.innerHTML = "🎁<span>Sin foto</span>";
+          photoWrap.appendChild(ph);
+        }
+
+        if (item.comprado) {
+          const ribbon = document.createElement("span");
+          ribbon.className = "purchased-ribbon";
+          ribbon.textContent = "✓ Comprado";
+          photoWrap.appendChild(ribbon);
+        }
+
+        // Cuerpo de la tarjeta
+        const body = document.createElement("div");
+        body.className = "gift-body";
+
+        const meta = document.createElement("div");
+        meta.className = "gift-meta";
+
+        const personBadge = document.createElement("span");
+        personBadge.className = "person-badge";
+        const linkedPerson = people.find((p) => p.id === item.personaId);
+        personBadge.textContent = linkedPerson ? linkedPerson.nombre : (item.personaNombre || "Sin asignar");
+        meta.appendChild(personBadge);
+
+        const formattedPrice = formatPrice(item.precio);
+        if (formattedPrice) {
+          const priceEl = document.createElement("span");
+          priceEl.className = "price-badge";
+          priceEl.textContent = formattedPrice;
+          meta.appendChild(priceEl);
+        }
+
+        const title = document.createElement("h3");
+        title.className = "gift-title";
+        title.textContent = item.nombre;
+
+        const actions = document.createElement("div");
+        actions.className = "gift-actions";
+
+        const safeHref = sanitizeUrl(item.enlace);
+        if (safeHref) {
+          const linkBtn = document.createElement("a");
+          linkBtn.className = "btn-link";
+          linkBtn.href = safeHref;
+          linkBtn.target = "_blank";
+          linkBtn.rel = "noopener noreferrer";
+          linkBtn.textContent = "🛒 Abrir enlace de compra";
+          actions.appendChild(linkBtn);
+        }
+
+        const actionsRow = document.createElement("div");
+        actionsRow.className = "gift-actions-row";
+
+        const buyBtn = document.createElement("button");
+        buyBtn.type = "button";
+        buyBtn.className = `btn-buy-toggle${item.comprado ? " is-bought" : ""}`;
+        buyBtn.textContent = item.comprado ? "☑ Comprado" : "☐ Marcar como Comprado";
+        buyBtn.addEventListener("click", async () => {
+          buyBtn.disabled = true;
+          try {
+            await updateDoc(doc(db, "listas_regalos", activePin, "items", item.id), {
+              purchased: !item.comprado
+            });
+          } catch (err) {
+            console.error(err);
+            showToast("No se pudo actualizar el estado");
+          } finally {
+            buyBtn.disabled = false;
+          }
         });
-        return;
-      }
 
-      const delBtn = e.target.closest("[data-del]");
-      if (delBtn) {
-        const id = delBtn.dataset.del;
-        const target = items.find((i) => i.id === id);
-        if (!target) return;
-        pendingDeleteItem = target;
-        document.getElementById("deleteConfirmText").textContent =
-          '¿Seguro que quieres eliminar «' + target.name + '» de la lista?';
-        document.getElementById("deleteModal").classList.remove("hidden");
-      }
-    });
-
-    // ======================== COMPRESIÓN EN CANVAS (800px / JPEG 0.7) ========================
-    function compressImageWithCanvas(file) {
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onerror = () => reject(new Error("No se pudo leer la imagen."));
-        reader.onload = () => {
-          const img = new Image();
-          img.onerror = () => reject(new Error("Formato de imagen no compatible."));
-          img.onload = () => {
-            const maxWidth = 800;
-            let w = img.naturalWidth;
-            let h = img.naturalHeight;
-            if (w > maxWidth) {
-              h = Math.round((h * maxWidth) / w);
-              w = maxWidth;
+        const delBtn = document.createElement("button");
+        delBtn.type = "button";
+        delBtn.className = "btn-delete";
+        delBtn.title = "Eliminar regalo";
+        delBtn.ariaLabel = "Eliminar regalo";
+        delBtn.textContent = "🗑";
+        delBtn.addEventListener("click", () => {
+          askConfirm(
+            "Eliminar regalo",
+            `¿Seguro que quieres borrar "${item.nombre}"?`,
+            async () => {
+              await deleteDoc(doc(db, "listas_regalos", activePin, "items", item.id));
+              showToast("Regalo eliminado");
             }
-            const canvas = document.createElement("canvas");
-            canvas.width = w;
-            canvas.height = h;
-            const ctx = canvas.getContext("2d");
-            ctx.fillStyle = "#FFFFFF";
-            ctx.fillRect(0, 0, w, h);
-            ctx.drawImage(img, 0, 0, w, h);
+          );
+        });
 
-            let dataUrl = canvas.toDataURL("image/jpeg", 0.7);
-            if (!false && dataUrl.length > 480000) {
-              const scale = 600 / w;
-              canvas.width = 600;
-              canvas.height = Math.round(h * scale);
-              const ctx2 = canvas.getContext("2d");
-              ctx2.fillStyle = "#FFFFFF";
-              ctx2.fillRect(0, 0, canvas.width, canvas.height);
-              ctx2.drawImage(img, 0, 0, canvas.width, canvas.height);
-              dataUrl = canvas.toDataURL("image/jpeg", 0.55);
-              w = canvas.width;
-              h = canvas.height;
-            }
+        actionsRow.appendChild(buyBtn);
+        actionsRow.appendChild(delBtn);
+        actions.appendChild(actionsRow);
 
-            canvas.toBlob((blob) => {
-              if (!blob) return reject(new Error("Error al comprimir imagen."));
-              resolve({ blob, dataUrl, width: w, height: h });
-            }, "image/jpeg", false ? 0.7 : (dataUrl.length > 400000 ? 0.55 : 0.7));
-          };
-          img.src = reader.result;
-        };
-        reader.readAsDataURL(file);
+        body.appendChild(meta);
+        body.appendChild(title);
+        body.appendChild(actions);
+
+        card.appendChild(photoWrap);
+        card.appendChild(body);
+        giftsGrid.appendChild(card);
       });
     }
 
-    const addModal = document.getElementById("addModal");
-    const addGiftForm = document.getElementById("addGiftForm");
-    const giftMemberSelect = document.getElementById("giftMemberSelect");
-    const giftMemberCustom = document.getElementById("giftMemberCustom");
-    const giftPhotoInput = document.getElementById("giftPhotoInput");
-    const photoPreview = document.getElementById("photoPreview");
-    const compressInfo = document.getElementById("compressInfo");
-    const formError = document.getElementById("formError");
-
-    function populatePersonSelect() {
-      const names = getAllPeopleNames();
-      if (names.length === 0) {
-        giftMemberSelect.classList.add("hidden");
-        giftMemberCustom.classList.remove("hidden");
-        giftMemberCustom.required = true;
-      } else {
-        giftMemberSelect.classList.remove("hidden");
-        giftMemberSelect.innerHTML = names.map((n) => '<option value="' + escapeHtml(n) + '">' + escapeHtml(n) + '</option>').join("") +
-          '<option value="__NEW__">+ Añadir nueva persona…</option>';
-        if (activeFilter !== "Todos" && names.includes(activeFilter)) {
-          giftMemberSelect.value = activeFilter;
-        }
-        giftMemberCustom.classList.add("hidden");
-        giftMemberCustom.required = false;
-      }
-    }
-
-    giftMemberSelect.addEventListener("change", () => {
-      const isNew = giftMemberSelect.value === "__NEW__";
-      giftMemberCustom.classList.toggle("hidden", !isNew);
-      giftMemberCustom.required = isNew;
-      if (isNew) giftMemberCustom.focus();
+    // ================= EVENTOS DE MODALES Y FORMULARIOS =================
+    document.querySelectorAll("[data-close-modal]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        closeModal(document.getElementById(btn.dataset.closeModal));
+      });
     });
 
-    function resetAddModal() {
-      addGiftForm.reset();
-      compressedPhotoBlob = null;
-      compressedPhotoDataUrl = "";
-      photoPreview.classList.add("hidden");
-      photoPreview.src = "";
-      compressInfo.classList.add("hidden");
-      formError.classList.add("hidden");
-      populatePersonSelect();
-    }
-
-    document.getElementById("btnOpenAdd").addEventListener("click", () => {
-      resetAddModal();
-      addModal.classList.remove("hidden");
+    [modalGift, modalPeople, modalConfirm].forEach((backdrop) => {
+      backdrop.addEventListener("click", (e) => {
+        if (e.target === backdrop) closeModal(backdrop);
+      });
     });
 
-    document.getElementById("btnCloseAdd").addEventListener("click", () => addModal.classList.add("hidden"));
-    document.getElementById("btnCancelAdd").addEventListener("click", () => addModal.classList.add("hidden"));
+    lightbox.addEventListener("click", () => closeModal(lightbox));
 
-    giftPhotoInput.addEventListener("change", async () => {
-      const file = giftPhotoInput.files && giftPhotoInput.files[0];
-      if (!file) return;
+    function askConfirm(title, message, onConfirm) {
+      confirmTitle.textContent = title;
+      confirmMessage.textContent = message;
+      pendingConfirmAction = onConfirm;
+      openModal(modalConfirm);
+    }
+
+    btnConfirmYes.addEventListener("click", async () => {
+      if (!pendingConfirmAction) return;
+      btnConfirmYes.disabled = true;
       try {
-        const res = await compressImageWithCanvas(file);
-        compressedPhotoBlob = res.blob;
-        compressedPhotoDataUrl = res.dataUrl;
-        photoPreview.src = res.dataUrl;
-        photoPreview.classList.remove("hidden");
-        const kb = Math.max(1, Math.round(res.blob.size / 1024));
-        compressInfo.textContent = "Comprimida a " + res.width + "×" + res.height + " px (" + kb + " KB JPEG)";
-        compressInfo.classList.remove("hidden");
+        await pendingConfirmAction();
+        closeModal(modalConfirm);
       } catch (err) {
-        formError.textContent = err.message;
-        formError.classList.remove("hidden");
+        console.error(err);
+        showToast("Ocurrió un error al eliminar");
+      } finally {
+        btnConfirmYes.disabled = false;
+        pendingConfirmAction = null;
       }
     });
 
-    addGiftForm.addEventListener("submit", async (e) => {
+    // Modal de Personas
+    document.getElementById("btn-open-people").addEventListener("click", () => {
+      renderPeopleModalList();
+      openModal(modalPeople);
+      personNameInput.focus();
+    });
+
+    formPerson.addEventListener("submit", async (e) => {
       e.preventDefault();
-      const saveBtn = document.getElementById("btnSaveGift");
-      saveBtn.disabled = true;
-      saveBtn.textContent = "Guardando…";
-      formError.classList.add("hidden");
+      const name = personNameInput.value.trim();
+      if (!name) return;
+
+      const submitBtn = formPerson.querySelector("button[type='submit']");
+      submitBtn.disabled = true;
+      try {
+        await ensurePersonExists(name);
+        personNameInput.value = "";
+        showToast("Persona añadida");
+      } catch (err) {
+        console.error(err);
+        showToast("Error al guardar la persona");
+      } finally {
+        submitBtn.disabled = false;
+      }
+    });
+
+    // Modal de Regalo
+    function resetGiftForm() {
+      formGift.reset();
+      compressedPhotoDataUrl = "";
+      photoPreviewImg.src = "";
+      photoPreviewWrap.classList.add("hidden");
+      inlinePersonBox.classList.toggle("hidden", people.length > 0);
+      refreshGiftPersonSelect();
+    }
+
+    document.getElementById("btn-open-add-gift").addEventListener("click", () => {
+      resetGiftForm();
+      openModal(modalGift);
+    });
+
+    btnToggleInlinePerson.addEventListener("click", () => {
+      inlinePersonBox.classList.toggle("hidden");
+      if (!inlinePersonBox.classList.contains("hidden")) {
+        giftPersonSelect.value = "";
+        giftNewPersonInput.focus();
+      }
+    });
+
+    giftPersonSelect.addEventListener("change", () => {
+      if (giftPersonSelect.value) {
+        inlinePersonBox.classList.add("hidden");
+        giftNewPersonInput.value = "";
+      }
+    });
+
+    giftPhotoInput.addEventListener("change", async (e) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
 
       try {
-        const names = getAllPeopleNames();
-        const useCustom = names.length === 0 || giftMemberSelect.value === "__NEW__";
-        const familyMember = (useCustom ? giftMemberCustom.value : giftMemberSelect.value).trim();
-        if (!familyMember) {
-          throw new Error("Escribe el nombre de la persona.");
+        const { dataUrl, byteSize, width, height } = await compressImage(file);
+        compressedPhotoDataUrl = dataUrl;
+        photoPreviewImg.src = dataUrl;
+        const kb = Math.max(1, Math.round(byteSize / 1024));
+        photoPreviewInfo.textContent = `Optimizada (${width}×${height} px · ${kb} KB)`;
+        photoPreviewWrap.classList.remove("hidden");
+      } catch (err) {
+        console.error(err);
+        showToast(err?.message || "No se pudo procesar la imagen");
+        giftPhotoInput.value = "";
+      }
+    });
+
+    document.getElementById("btn-remove-photo").addEventListener("click", () => {
+      compressedPhotoDataUrl = "";
+      giftPhotoInput.value = "";
+      photoPreviewImg.src = "";
+      photoPreviewWrap.classList.add("hidden");
+    });
+
+    formGift.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      if (!activePin) return;
+
+      const title = giftTitleInput.value.trim();
+      if (!title) {
+        showToast("Escribe el nombre del regalo");
+        return;
+      }
+
+      const inlineName = giftNewPersonInput.value.trim();
+      const selectedId = giftPersonSelect.value;
+
+      if (!selectedId && !inlineName) {
+        showToast("Selecciona o añade una persona");
+        inlinePersonBox.classList.remove("hidden");
+        giftNewPersonInput.focus();
+        return;
+      }
+
+      btnSaveGift.disabled = true;
+      btnSaveGift.textContent = "Guardando...";
+
+      try {
+        let targetPerson;
+        if (inlineName) {
+          targetPerson = await ensurePersonExists(inlineName);
+        } else {
+          targetPerson = people.find((p) => p.id === selectedId);
         }
 
-        const name = document.getElementById("giftName").value.trim();
-        const priceRaw = document.getElementById("giftPrice").value.trim();
-        const storeUrl = document.getElementById("giftUrl").value.trim();
-
-        const personExists = peopleDocs.some((p) => p.name.toLowerCase() === familyMember.toLowerCase());
-        if (!personExists) {
-          await addDoc(collection(db, "listas_regalos", currentPin, "personas"), {
-            name: familyMember,
-            createdAt: Date.now()
-          });
+        if (!targetPerson) {
+          throw new Error("Persona no válida");
         }
 
-        let imageUrl = "";
-        let photoPath = "";
+        const fotoUrl = compressedPhotoDataUrl || "";
+        const priceRaw = giftPriceInput.value.trim();
+        const precio = priceRaw === "" ? null : Number(priceRaw);
+        const enlace = sanitizeUrl(giftLinkInput.value);
 
-        if (compressedPhotoDataUrl) {
-          imageUrl = compressedPhotoDataUrl;
-        }
-
-        await addDoc(collection(db, "listas_regalos", currentPin, "items"), {
-          familyMember,
-          name,
-          price: priceRaw ? Number(priceRaw) : null,
-          storeUrl: storeUrl || "",
-          imageUrl,
-          photoPath,
+        // Campos obligatorios según las reglas de Firestore de este proyecto
+        await addDoc(collection(db, "listas_regalos", activePin, "items"), {
+          familyMember: targetPerson.nombre,
+          name: title,
+          price: Number.isNaN(precio) ? null : precio,
+          storeUrl: enlace,
+          imageUrl: fotoUrl,
           purchased: false,
           createdAt: Date.now()
         });
 
-        addModal.classList.add("hidden");
-        resetAddModal();
+        closeModal(modalGift);
+        resetGiftForm();
+        showToast("Regalo guardado");
       } catch (err) {
         console.error(err);
-        formError.textContent = "Error al guardar el regalo: " + (err.message || "revisa los permisos");
-        formError.classList.remove("hidden");
+        showToast("Error al guardar el regalo");
       } finally {
-        saveBtn.disabled = false;
-        saveBtn.textContent = "Guardar regalo";
+        btnSaveGift.disabled = false;
+        btnSaveGift.textContent = "Guardar regalo";
       }
     });
 
-    // ======================== ELIMINAR TARJETA ========================
-    const deleteModal = document.getElementById("deleteModal");
-    document.getElementById("btnCancelDelete").addEventListener("click", () => {
-      pendingDeleteItem = null;
-      deleteModal.classList.add("hidden");
-    });
-
-    document.getElementById("btnConfirmDelete").addEventListener("click", async () => {
-      if (!pendingDeleteItem) return;
-      const target = pendingDeleteItem;
-      deleteModal.classList.add("hidden");
-      pendingDeleteItem = null;
-
-      try {
-        await deleteDoc(doc(db, "listas_regalos", currentPin, "items", target.id));
-
-      } catch (err) {
-        console.error(err);
-      }
-    });
-
-    // Auto-desbloqueo si hay un PIN guardado en este móvil
+    // ================= AUTO-LOGIN AL CARGAR =================
     const savedPin = localStorage.getItem(STORAGE_PIN_KEY);
-    if (savedPin && /^\d{4}$/.test(savedPin)) {
-      enteredDigits = savedPin;
-      renderDots();
+    if (savedPin && /^\d{4}$/.test(savedPin) && !isConfigPending) {
+      enteredPin = savedPin;
+      renderPinDots();
       verifyAndUnlock(savedPin);
     }
   </script>
