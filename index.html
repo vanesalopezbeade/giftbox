@@ -1523,57 +1523,61 @@
     const MAX_PHOTO_DATAURL_LENGTH = 140000;
 
     // Compresión de imagen en cliente con Canvas para guardar en Firestore (< 550 KB)
+    function compressLoadedImage(img, maxLength = MAX_PHOTO_DATAURL_LENGTH) {
+      const renderAttempt = (maxWidth, quality) => {
+        let width = img.naturalWidth || img.width;
+        let height = img.naturalHeight || img.height;
+
+        if (width > maxWidth) {
+          height = Math.round(height * (maxWidth / width));
+          width = maxWidth;
+        }
+
+        const canvas = document.createElement("canvas");
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext("2d");
+        ctx.fillStyle = "#ffffff";
+        ctx.fillRect(0, 0, width, height);
+        ctx.drawImage(img, 0, 0, width, height);
+
+        const dataUrl = canvas.toDataURL("image/jpeg", quality);
+        return { dataUrl, width, height };
+      };
+
+      const attempts = [
+        [1200, 0.72],
+        [1000, 0.68],
+        [800, 0.62],
+        [700, 0.56],
+        [600, 0.5],
+        [520, 0.44],
+        [420, 0.38],
+        [320, 0.32]
+      ];
+
+      let result = null;
+      for (const [maxWidth, quality] of attempts) {
+        result = renderAttempt(maxWidth, quality);
+        if (result.dataUrl.length <= maxLength) break;
+      }
+
+      if (!result || result.dataUrl.length > maxLength) {
+        throw new Error("La imagen es demasiado pesada, prueba con otra foto");
+      }
+
+      const approxBytes = Math.round((result.dataUrl.length - result.dataUrl.indexOf(",") - 1) * 0.75);
+      return { ...result, byteSize: approxBytes };
+    }
+
     function compressImage(file, maxLength = MAX_PHOTO_DATAURL_LENGTH) {
       return new Promise((resolve, reject) => {
         const objectUrl = URL.createObjectURL(file);
         const img = new Image();
         img.onload = () => {
           URL.revokeObjectURL(objectUrl);
-          const renderAttempt = (maxWidth, quality) => {
-            let width = img.naturalWidth || img.width;
-            let height = img.naturalHeight || img.height;
-
-            if (width > maxWidth) {
-              height = Math.round(height * (maxWidth / width));
-              width = maxWidth;
-            }
-
-            const canvas = document.createElement("canvas");
-            canvas.width = width;
-            canvas.height = height;
-            const ctx = canvas.getContext("2d");
-            ctx.fillStyle = "#ffffff";
-            ctx.fillRect(0, 0, width, height);
-            ctx.drawImage(img, 0, 0, width, height);
-
-            const dataUrl = canvas.toDataURL("image/jpeg", quality);
-            return { dataUrl, width, height };
-          };
-
-          const attempts = [
-            [1200, 0.72],
-            [1000, 0.68],
-            [800, 0.62],
-            [700, 0.56],
-            [600, 0.5],
-            [520, 0.44],
-            [420, 0.38],
-            [320, 0.32]
-          ];
-
-          let result = null;
-          for (const [maxWidth, quality] of attempts) {
-            result = renderAttempt(maxWidth, quality);
-            if (result.dataUrl.length <= maxLength) break;
-          }
-
-          if (!result || result.dataUrl.length > maxLength) {
-            reject(new Error("La imagen es demasiado pesada, prueba con otra foto"));
-            return;
-          }
-
-          const approxBytes = Math.round((result.dataUrl.length - result.dataUrl.indexOf(",") - 1) * 0.75);
-          resolve({ ...result, byteSize: approxBytes });
+          try { resolve(compressLoadedImage(img, maxLength)); }
+          catch (err) { reject(err); }
         };
         img.onerror = () => {
           URL.revokeObjectURL(objectUrl);
@@ -1581,6 +1585,27 @@
         };
         img.src = objectUrl;
       });
+    }
+
+    function compressDataUrlIfNeeded(dataUrl, maxLength = MAX_PHOTO_DATAURL_LENGTH) {
+      if (!dataUrl || dataUrl.length <= maxLength) return Promise.resolve(dataUrl);
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => {
+          try { resolve(compressLoadedImage(img, maxLength).dataUrl); }
+          catch (err) { reject(err); }
+        };
+        img.onerror = () => reject(new Error("No se pudo procesar una foto existente"));
+        img.src = dataUrl;
+      });
+    }
+
+    async function normalizePhotoListForSave(list) {
+      const out = [];
+      for (const src of list.slice(0, MAX_PHOTOS)) {
+        out.push(await compressDataUrlIfNeeded(src, MAX_PHOTO_DATAURL_LENGTH));
+      }
+      return out;
     }
 
     // ================= LÓGICA DE PIN Y ACCESO =================
@@ -2203,6 +2228,14 @@
 
       photoList = getGiftPhotos(gift).slice(0, MAX_PHOTOS);
       renderPhotoGrid();
+      // Fotos antiguas pueden superar el límite actual; las ajustamos para que quepan al guardar.
+      normalizePhotoListForSave(photoList).then((normalized) => {
+        if (editingGiftId !== gift.id) return;
+        const changed = normalized.length !== photoList.length || normalized.some((src, i) => src !== photoList[i]);
+        if (!changed) return;
+        photoList = normalized;
+        renderPhotoGrid();
+      }).catch((err) => console.warn("No se pudieron optimizar fotos existentes", err));
     }
 
     function resetGiftForm() {
@@ -2309,7 +2342,9 @@
           throw new Error("Persona no válida");
         }
 
-        const imageUrls = photoList.slice(0, MAX_PHOTOS);
+        const imageUrls = await normalizePhotoListForSave(photoList);
+        photoList = imageUrls.slice();
+        renderPhotoGrid();
         const imageUrl = imageUrls[0] || "";
         const storeUrl = sanitizeUrl(giftLinkInput.value);
 
@@ -2341,7 +2376,11 @@
         showToast(wasEditing ? "Cambios guardados" : "Regalo guardado");
       } catch (err) {
         console.error(err);
-        showToast(wasEditing ? "No se pudieron guardar los cambios" : "Error al guardar el regalo");
+        const msg = err?.message || "";
+        const tooBig = /maximum size|too large|longer than|1048487|1,048,487/i.test(msg) || err?.code === "invalid-argument";
+        showToast(tooBig
+          ? "Las fotos pesan demasiado para guardarlas juntas. Prueba con menos fotos."
+          : (wasEditing ? "No se pudieron guardar los cambios" : "Error al guardar el regalo"));
       } finally {
         btnSaveGift.disabled = false;
         btnSaveGift.textContent = editingGiftId ? "Guardar cambios" : "Guardar regalo";
