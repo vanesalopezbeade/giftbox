@@ -409,7 +409,7 @@
     }
 
     .gift-card.purchased {
-      opacity: 0.72;
+      opacity: 0.78;
     }
 
     .gift-photo-wrap {
@@ -418,6 +418,10 @@
       aspect-ratio: 4 / 3;
       background: var(--surface-muted);
       overflow: hidden;
+    }
+
+    .gift-photo-wrap.no-photo {
+      aspect-ratio: 16 / 9;
     }
 
     .gift-photo {
@@ -465,6 +469,22 @@
       box-shadow: var(--shadow-sm);
     }
 
+    .photo-count {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 9px;
+      border-radius: 999px;
+      background: rgba(24, 24, 27, 0.7);
+      color: #FFFFFF;
+      font-size: 0.72rem;
+      font-weight: 700;
+      backdrop-filter: blur(4px);
+    }
+
     .gift-body {
       padding: 16px;
       display: flex;
@@ -490,13 +510,6 @@
       color: var(--primary);
       font-size: 0.78rem;
       font-weight: 700;
-    }
-
-    .price-badge {
-      font-size: 1rem;
-      font-weight: 700;
-      color: var(--primary);
-      font-variant-numeric: tabular-nums;
     }
 
     .gift-title {
@@ -549,7 +562,7 @@
       background: var(--surface-muted);
     }
 
-    .btn-buy-toggle {
+    .btn-done {
       flex: 1;
       min-height: 44px;
       padding: 0 12px;
@@ -563,40 +576,93 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 6px;
-      transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+      gap: 8px;
+      transition: background-color 0.18s ease, border-color 0.18s ease, color 0.18s ease;
     }
 
-    .btn-buy-toggle:hover {
+    .btn-done:hover {
       background: var(--surface-muted);
     }
 
-    .btn-buy-toggle.is-bought {
-      background: var(--success-soft);
-      border-color: #86EFAC;
-      color: var(--success);
+    .btn-done .done-check {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 1.5px solid #C9C7C1;
+      background: transparent;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: background-color 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
     }
 
+    .btn-done .done-check svg {
+      width: 12px;
+      height: 12px;
+      stroke: #FFFFFF;
+      stroke-width: 3;
+      opacity: 0;
+      transform: scale(0.5);
+      transition: opacity 0.18s ease, transform 0.18s ease;
+    }
+
+    .btn-done.is-bought {
+      background: var(--success-soft);
+      border-color: #86EFAC;
+      color: #166534;
+      font-weight: 700;
+    }
+
+    .btn-done.is-bought .done-check {
+      background: var(--success);
+      border-color: var(--success);
+      transform: scale(1.05);
+    }
+
+    .btn-done.is-bought .done-check svg {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .btn-edit,
     .btn-delete {
+      width: 44px;
       min-width: 44px;
       min-height: 44px;
-      padding: 0 12px;
+      padding: 0;
       border-radius: 12px;
-      border: 1px solid #FECACA;
-      background: var(--danger-soft);
-      color: var(--danger);
-      font-size: 0.85rem;
-      font-weight: 600;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text-muted);
       cursor: pointer;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
-      transition: background-color 0.15s ease, border-color 0.15s ease;
+      transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+    }
+
+    .btn-edit:hover {
+      background: var(--surface-muted);
+      color: var(--text);
+    }
+
+    .btn-delete {
+      border-color: #FECACA;
+      background: var(--danger-soft);
+      color: var(--danger);
     }
 
     .btn-delete:hover {
       border-color: #FCA5A5;
+      background: #FEE2E2;
+    }
+
+    .btn-edit svg,
+    .btn-delete svg {
+      width: 18px;
+      height: 18px;
     }
 
     /* Estado vacío */
@@ -848,41 +914,73 @@
       color: var(--primary);
     }
 
-    .preview-wrap {
-      position: relative;
-      margin-top: 10px;
-      border-radius: 14px;
-      overflow: hidden;
-      border: 1px solid var(--border);
+    .photo-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
+      margin-bottom: 10px;
     }
 
-    .preview-wrap img {
+    .photo-grid:empty {
+      display: none;
+      margin-bottom: 0;
+    }
+
+    .photo-thumb {
+      position: relative;
+      aspect-ratio: 1;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: var(--surface-muted);
+    }
+
+    .photo-thumb img {
       width: 100%;
-      max-height: 240px;
+      height: 100%;
       object-fit: cover;
       display: block;
     }
 
-    .preview-remove {
+    .photo-del {
       position: absolute;
-      top: 8px;
-      right: 8px;
-      height: 34px;
-      padding: 0 12px;
-      border-radius: 999px;
+      top: 4px;
+      right: 4px;
+      width: 24px;
+      height: 24px;
+      padding: 0;
+      border-radius: 50%;
       border: none;
-      background: rgba(24, 24, 27, 0.78);
+      background: rgba(24, 24, 27, 0.75);
       color: #FFFFFF;
-      font-size: 0.8rem;
+      font-size: 0.72rem;
       font-weight: 700;
+      line-height: 1;
       cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
 
-    .preview-info {
-      padding: 6px 10px;
+    .photo-cover {
+      position: absolute;
+      left: 4px;
+      bottom: 4px;
+      padding: 2px 6px;
+      border-radius: 999px;
+      background: rgba(15, 118, 110, 0.92);
+      color: #FFFFFF;
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
+
+    .photo-info {
+      margin-top: 8px;
       font-size: 0.78rem;
       color: var(--text-muted);
-      background: var(--surface);
+      min-height: 1em;
     }
 
     /* Lista dentro de modal de personas */
@@ -938,6 +1036,54 @@
       max-height: 90dvh;
       border-radius: 14px;
       object-fit: contain;
+      cursor: default;
+    }
+
+    .lightbox-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 46px;
+      height: 46px;
+      padding: 0;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      background: rgba(24, 24, 27, 0.55);
+      color: #FFFFFF;
+      font-size: 1.5rem;
+      line-height: 1;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(6px);
+    }
+
+    .lightbox-nav:hover {
+      background: rgba(24, 24, 27, 0.8);
+    }
+
+    .lightbox-nav.prev {
+      left: 14px;
+    }
+
+    .lightbox-nav.next {
+      right: 14px;
+    }
+
+    .lightbox-counter {
+      position: absolute;
+      left: 50%;
+      bottom: calc(20px + env(safe-area-inset-bottom));
+      transform: translateX(-50%);
+      padding: 5px 12px;
+      border-radius: 999px;
+      background: rgba(24, 24, 27, 0.6);
+      color: #FFFFFF;
+      font-size: 0.8rem;
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+      backdrop-filter: blur(6px);
     }
 
     /* Toast de feedback */
@@ -1037,7 +1183,7 @@
   <div id="modal-gift" class="modal-backdrop hidden" role="dialog" aria-modal="true">
     <div class="modal-sheet">
       <div class="modal-header">
-        <h2>Nuevo regalo</h2>
+        <h2 id="gift-modal-title">Nuevo regalo</h2>
         <button type="button" class="modal-close" data-close-modal="modal-gift" aria-label="Cerrar">✕</button>
       </div>
 
@@ -1072,30 +1218,14 @@
         </div>
 
         <div class="form-group">
-          <label class="form-label" for="gift-price">Precio estimado (opcional)</label>
-          <input
-            type="number"
-            id="gift-price"
-            class="form-control"
-            placeholder="Ej: 29.95"
-            step="0.01"
-            min="0"
-            inputmode="decimal"
-          />
-        </div>
-
-        <div class="form-group">
-          <label class="form-label" for="gift-photo-input">Foto desde galería o cámara (opcional)</label>
-          <label class="upload-box" for="gift-photo-input">
+          <label class="form-label" for="gift-photo-input">Fotos (opcional · hasta 4)</label>
+          <div id="photo-grid" class="photo-grid"></div>
+          <label class="upload-box" for="gift-photo-input" id="photo-upload-box">
             <span style="font-size: 1.5rem;">📷</span>
-            <span>Toca para elegir foto o hacer una</span>
+            <span>Añadir fotos</span>
           </label>
-          <input type="file" id="gift-photo-input" accept="image/*" class="hidden" />
-          <div id="photo-preview-wrap" class="preview-wrap hidden">
-            <img id="photo-preview-img" alt="Vista previa del regalo" />
-            <button type="button" class="preview-remove" id="btn-remove-photo">Quitar</button>
-            <div class="preview-info" id="photo-preview-info"></div>
-          </div>
+          <input type="file" id="gift-photo-input" accept="image/*" multiple class="hidden" />
+          <div class="photo-info" id="photo-preview-info"></div>
         </div>
 
         <div class="form-group">
@@ -1160,7 +1290,10 @@
 
   <!-- ================= VISOR DE FOTO AMPLIADA ================= -->
   <div id="lightbox" class="lightbox hidden" role="dialog" aria-modal="true">
+    <button type="button" class="lightbox-nav prev" id="lightbox-prev" aria-label="Foto anterior">‹</button>
     <img id="lightbox-img" alt="Foto ampliada" />
+    <button type="button" class="lightbox-nav next" id="lightbox-next" aria-label="Foto siguiente">›</button>
+    <div id="lightbox-counter" class="lightbox-counter hidden"></div>
   </div>
 
   <div id="toast" class="toast hidden"></div>
@@ -1212,8 +1345,14 @@
     let selectedPersonFilter = "ALL"; // "ALL" o id de persona
     let unsubPeople = null;
     let unsubGifts = null;
-    let compressedPhotoDataUrl = "";
+    let photoList = []; // data URLs de las fotos del regalo (la primera es la portada)
+    let editingGiftId = null;
+    let editingGift = null;
     let pendingConfirmAction = null;
+
+    // Galería del visor ampliado
+    let lightboxPhotos = [];
+    let lightboxIndex = 0;
 
     // Referencias DOM
     const lockScreen = document.getElementById("lock-screen");
@@ -1231,15 +1370,15 @@
 
     const modalGift = document.getElementById("modal-gift");
     const formGift = document.getElementById("form-gift");
+    const giftModalTitle = document.getElementById("gift-modal-title");
     const giftPersonSelect = document.getElementById("gift-person-select");
     const btnToggleInlinePerson = document.getElementById("btn-toggle-inline-person");
     const inlinePersonBox = document.getElementById("inline-person-box");
     const giftNewPersonInput = document.getElementById("gift-new-person");
     const giftTitleInput = document.getElementById("gift-title");
-    const giftPriceInput = document.getElementById("gift-price");
     const giftPhotoInput = document.getElementById("gift-photo-input");
-    const photoPreviewWrap = document.getElementById("photo-preview-wrap");
-    const photoPreviewImg = document.getElementById("photo-preview-img");
+    const photoGrid = document.getElementById("photo-grid");
+    const photoUploadBox = document.getElementById("photo-upload-box");
     const photoPreviewInfo = document.getElementById("photo-preview-info");
     const giftLinkInput = document.getElementById("gift-link");
     const btnSaveGift = document.getElementById("btn-save-gift");
@@ -1257,7 +1396,88 @@
 
     const lightbox = document.getElementById("lightbox");
     const lightboxImg = document.getElementById("lightbox-img");
+    const lightboxPrev = document.getElementById("lightbox-prev");
+    const lightboxNext = document.getElementById("lightbox-next");
+    const lightboxCounter = document.getElementById("lightbox-counter");
     const toastEl = document.getElementById("toast");
+
+    // ================= FOTOS Y VISOR =================
+    function getGiftPhotos(item) {
+      if (Array.isArray(item.fotos) && item.fotos.length) return item.fotos.filter(Boolean);
+      if (Array.isArray(item.imageUrls) && item.imageUrls.length) return item.imageUrls.filter(Boolean);
+      const single = item.fotoUrl || item.imageUrl || "";
+      return single ? [single] : [];
+    }
+
+    function renderPhotoGrid() {
+      photoGrid.innerHTML = "";
+      photoList.forEach((src, idx) => {
+        const thumb = document.createElement("div");
+        thumb.className = "photo-thumb";
+
+        const img = document.createElement("img");
+        img.src = src;
+        img.alt = `Foto ${idx + 1}`;
+        img.loading = "lazy";
+
+        const del = document.createElement("button");
+        del.type = "button";
+        del.className = "photo-del";
+        del.textContent = "✕";
+        del.title = "Quitar foto";
+        del.setAttribute("aria-label", `Quitar foto ${idx + 1}`);
+        del.addEventListener("click", () => {
+          photoList.splice(idx, 1);
+          renderPhotoGrid();
+        });
+
+        thumb.appendChild(img);
+        thumb.appendChild(del);
+
+        if (idx === 0 && photoList.length > 1) {
+          const cover = document.createElement("span");
+          cover.className = "photo-cover";
+          cover.textContent = "Portada";
+          thumb.appendChild(cover);
+        }
+
+        photoGrid.appendChild(thumb);
+      });
+
+      const count = photoList.length;
+      photoUploadBox.classList.toggle("hidden", count >= MAX_PHOTOS);
+      photoPreviewInfo.textContent = count === 0
+        ? ""
+        : count >= MAX_PHOTOS
+          ? `${count}/${MAX_PHOTOS} fotos (máximo alcanzado)`
+          : `${count}/${MAX_PHOTOS} fotos · la primera es la portada`;
+    }
+
+    function openLightbox(photos, startIndex = 0) {
+      lightboxPhotos = Array.isArray(photos) ? photos.filter(Boolean) : [];
+      if (!lightboxPhotos.length) return;
+      lightboxIndex = Math.min(Math.max(startIndex, 0), lightboxPhotos.length - 1);
+      renderLightbox();
+      openModal(lightbox);
+    }
+
+    function renderLightbox() {
+      const total = lightboxPhotos.length;
+      if (!total) return;
+      lightboxIndex = (lightboxIndex + total) % total;
+      lightboxImg.src = lightboxPhotos[lightboxIndex];
+      const multi = total > 1;
+      lightboxPrev.classList.toggle("hidden", !multi);
+      lightboxNext.classList.toggle("hidden", !multi);
+      lightboxCounter.classList.toggle("hidden", !multi);
+      lightboxCounter.textContent = multi ? `${lightboxIndex + 1} / ${total}` : "";
+    }
+
+    function stepLightbox(dir) {
+      if (lightboxPhotos.length < 2) return;
+      lightboxIndex += dir;
+      renderLightbox();
+    }
 
     // ================= UTILIDADES =================
     let toastTimer = null;
@@ -1297,18 +1517,13 @@
       return "";
     }
 
-    function formatPrice(value) {
-      if (value === null || value === undefined || value === "") return "";
-      const num = Number(value);
-      if (Number.isNaN(num)) return "";
-      return `${num.toLocaleString("es-ES", { minimumFractionDigits: 0, maximumFractionDigits: 2 })} €`;
-    }
-
-    // Las reglas de Firestore permiten imageUrl de hasta 550000 caracteres
-    const MAX_IMAGE_DATAURL_LENGTH = 540000;
+    // Firestore: imageUrl <= 550000 chars por regla; doc <= 1 MiB total.
+    // Con varias fotos usamos un tope menor por imagen para que quepan en el documento.
+    const MAX_PHOTOS = 4;
+    const MAX_PHOTO_DATAURL_LENGTH = 140000;
 
     // Compresión de imagen en cliente con Canvas para guardar en Firestore (< 550 KB)
-    function compressImage(file) {
+    function compressImage(file, maxLength = MAX_PHOTO_DATAURL_LENGTH) {
       return new Promise((resolve, reject) => {
         const objectUrl = URL.createObjectURL(file);
         const img = new Image();
@@ -1336,21 +1551,23 @@
           };
 
           const attempts = [
-            [800, 0.7],
-            [700, 0.6],
-            [600, 0.55],
-            [520, 0.45],
-            [420, 0.4],
-            [320, 0.35]
+            [1200, 0.72],
+            [1000, 0.68],
+            [800, 0.62],
+            [700, 0.56],
+            [600, 0.5],
+            [520, 0.44],
+            [420, 0.38],
+            [320, 0.32]
           ];
 
           let result = null;
           for (const [maxWidth, quality] of attempts) {
             result = renderAttempt(maxWidth, quality);
-            if (result.dataUrl.length <= MAX_IMAGE_DATAURL_LENGTH) break;
+            if (result.dataUrl.length <= maxLength) break;
           }
 
-          if (!result || result.dataUrl.length > MAX_IMAGE_DATAURL_LENGTH) {
+          if (!result || result.dataUrl.length > maxLength) {
             reject(new Error("La imagen es demasiado pesada, prueba con otra foto"));
             return;
           }
@@ -1540,12 +1757,13 @@
           // Compatibilidad: acepta documentos nuevos y los creados por la versión "Regalos en Familia"
           gifts = snapshot.docs.map((d) => {
             const data = d.data();
+            const fotos = getGiftPhotos(data);
             return {
               id: d.id,
               ...data,
               nombre: data.nombre ?? data.name ?? "",
-              precio: data.precio ?? data.price ?? null,
-              fotoUrl: data.fotoUrl ?? data.imageUrl ?? "",
+              fotos,
+              fotoUrl: fotos[0] || "",
               enlace: data.enlace ?? data.storeUrl ?? "",
               comprado: data.comprado ?? data.purchased ?? false,
               personaId: data.personaId ?? "",
@@ -1744,20 +1962,28 @@
         card.className = `gift-card${item.comprado ? " purchased" : ""}`;
 
         // Foto superior
+        const photos = getGiftPhotos(item);
+        const cover = photos[0] || "";
         const photoWrap = document.createElement("div");
         photoWrap.className = "gift-photo-wrap";
 
-        if (item.fotoUrl) {
+        if (!cover) photoWrap.classList.add("no-photo");
+
+        if (cover) {
           const img = document.createElement("img");
           img.className = "gift-photo";
-          img.src = item.fotoUrl;
+          img.src = cover;
           img.alt = item.nombre || "Foto del regalo";
           img.loading = "lazy";
-          img.addEventListener("click", () => {
-            lightboxImg.src = item.fotoUrl;
-            openModal(lightbox);
-          });
+          img.addEventListener("click", () => openLightbox(photos, 0));
           photoWrap.appendChild(img);
+
+          if (photos.length > 1) {
+            const count = document.createElement("span");
+            count.className = "photo-count";
+            count.textContent = `📷 ${photos.length}`;
+            photoWrap.appendChild(count);
+          }
         } else {
           const ph = document.createElement("div");
           ph.className = "gift-photo-placeholder";
@@ -1785,14 +2011,6 @@
         personBadge.textContent = linkedPerson ? linkedPerson.nombre : (item.personaNombre || "Sin asignar");
         meta.appendChild(personBadge);
 
-        const formattedPrice = formatPrice(item.precio);
-        if (formattedPrice) {
-          const priceEl = document.createElement("span");
-          priceEl.className = "price-badge";
-          priceEl.textContent = formattedPrice;
-          meta.appendChild(priceEl);
-        }
-
         const title = document.createElement("h3");
         title.className = "gift-title";
         title.textContent = item.nombre;
@@ -1816,8 +2034,13 @@
 
         const buyBtn = document.createElement("button");
         buyBtn.type = "button";
-        buyBtn.className = `btn-buy-toggle${item.comprado ? " is-bought" : ""}`;
-        buyBtn.textContent = item.comprado ? "☑ Comprado" : "☐ Marcar como Comprado";
+        buyBtn.className = `btn-done${item.comprado ? " is-bought" : ""}`;
+        buyBtn.setAttribute("aria-pressed", item.comprado ? "true" : "false");
+        buyBtn.innerHTML =
+          '<span class="done-check">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>' +
+          "</span>" +
+          `<span>${item.comprado ? "Comprado" : "Marcar comprado"}</span>`;
         buyBtn.addEventListener("click", async () => {
           buyBtn.disabled = true;
           try {
@@ -1832,12 +2055,22 @@
           }
         });
 
+        const editBtn = document.createElement("button");
+        editBtn.type = "button";
+        editBtn.className = "btn-edit";
+        editBtn.title = "Editar regalo";
+        editBtn.setAttribute("aria-label", "Editar regalo");
+        editBtn.innerHTML =
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>';
+        editBtn.addEventListener("click", () => openGiftModal(item));
+
         const delBtn = document.createElement("button");
         delBtn.type = "button";
         delBtn.className = "btn-delete";
         delBtn.title = "Eliminar regalo";
-        delBtn.ariaLabel = "Eliminar regalo";
-        delBtn.textContent = "🗑";
+        delBtn.setAttribute("aria-label", "Eliminar regalo");
+        delBtn.innerHTML =
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>';
         delBtn.addEventListener("click", () => {
           askConfirm(
             "Eliminar regalo",
@@ -1850,6 +2083,7 @@
         });
 
         actionsRow.appendChild(buyBtn);
+        actionsRow.appendChild(editBtn);
         actionsRow.appendChild(delBtn);
         actions.appendChild(actionsRow);
 
@@ -1876,7 +2110,18 @@
       });
     });
 
-    lightbox.addEventListener("click", () => closeModal(lightbox));
+    lightbox.addEventListener("click", (e) => {
+      if (e.target === lightbox) closeModal(lightbox);
+    });
+    lightboxPrev.addEventListener("click", (e) => { e.stopPropagation(); stepLightbox(-1); });
+    lightboxNext.addEventListener("click", (e) => { e.stopPropagation(); stepLightbox(1); });
+    lightboxImg.addEventListener("click", (e) => e.stopPropagation());
+    document.addEventListener("keydown", (e) => {
+      if (lightbox.classList.contains("hidden")) return;
+      if (e.key === "ArrowLeft") { e.preventDefault(); stepLightbox(-1); }
+      else if (e.key === "ArrowRight") { e.preventDefault(); stepLightbox(1); }
+      else if (e.key === "Escape") { e.preventDefault(); closeModal(lightbox); }
+    });
 
     function askConfirm(title, message, onConfirm) {
       confirmTitle.textContent = title;
@@ -1926,19 +2171,54 @@
       }
     });
 
-    // Modal de Regalo
+    // Modal de Regalo (crear o editar)
+    function openGiftModal(gift = null) {
+      resetGiftForm();
+      editingGiftId = gift ? gift.id : null;
+      editingGift = gift || null;
+
+      giftModalTitle.textContent = gift ? "Editar regalo" : "Nuevo regalo";
+      btnSaveGift.textContent = gift ? "Guardar cambios" : "Guardar regalo";
+      openModal(modalGift);
+
+      if (!gift) return;
+
+      giftTitleInput.value = gift.nombre || "";
+      giftLinkInput.value = gift.enlace || "";
+
+      // Los regalos guardan el nombre de la persona, no su id
+      const personName = (gift.personaNombre || "").toLowerCase();
+      const match = people.find((p) => p.nombre.toLowerCase() === personName);
+      if (match) {
+        giftPersonSelect.value = match.id;
+        inlinePersonBox.classList.add("hidden");
+      } else if (gift.personaNombre) {
+        const opt = document.createElement("option");
+        opt.value = "__keep__";
+        opt.textContent = gift.personaNombre;
+        giftPersonSelect.appendChild(opt);
+        giftPersonSelect.value = "__keep__";
+        inlinePersonBox.classList.add("hidden");
+      }
+
+      photoList = getGiftPhotos(gift).slice(0, MAX_PHOTOS);
+      renderPhotoGrid();
+    }
+
     function resetGiftForm() {
       formGift.reset();
-      compressedPhotoDataUrl = "";
-      photoPreviewImg.src = "";
-      photoPreviewWrap.classList.add("hidden");
+      editingGiftId = null;
+      editingGift = null;
+      photoList = [];
+      renderPhotoGrid();
+      giftModalTitle.textContent = "Nuevo regalo";
+      btnSaveGift.textContent = "Guardar regalo";
       inlinePersonBox.classList.toggle("hidden", people.length > 0);
       refreshGiftPersonSelect();
     }
 
     document.getElementById("btn-open-add-gift").addEventListener("click", () => {
-      resetGiftForm();
-      openModal(modalGift);
+      openGiftModal();
     });
 
     btnToggleInlinePerson.addEventListener("click", () => {
@@ -1957,28 +2237,33 @@
     });
 
     giftPhotoInput.addEventListener("change", async (e) => {
-      const file = e.target.files?.[0];
-      if (!file) return;
+      const files = Array.from(e.target.files || []);
+      if (!files.length) return;
 
-      try {
-        const { dataUrl, byteSize, width, height } = await compressImage(file);
-        compressedPhotoDataUrl = dataUrl;
-        photoPreviewImg.src = dataUrl;
-        const kb = Math.max(1, Math.round(byteSize / 1024));
-        photoPreviewInfo.textContent = `Optimizada (${width}×${height} px · ${kb} KB)`;
-        photoPreviewWrap.classList.remove("hidden");
-      } catch (err) {
-        console.error(err);
-        showToast(err?.message || "No se pudo procesar la imagen");
+      const remaining = MAX_PHOTOS - photoList.length;
+      if (remaining <= 0) {
+        showToast(`Máximo ${MAX_PHOTOS} fotos por regalo`);
         giftPhotoInput.value = "";
+        return;
       }
-    });
 
-    document.getElementById("btn-remove-photo").addEventListener("click", () => {
-      compressedPhotoDataUrl = "";
+      const toAdd = files.slice(0, remaining);
+      if (files.length > remaining) {
+        showToast(`Solo se añadirán ${remaining} foto(s) más (máx. ${MAX_PHOTOS})`);
+      }
+
+      for (const file of toAdd) {
+        try {
+          const { dataUrl } = await compressImage(file, MAX_PHOTO_DATAURL_LENGTH);
+          photoList.push(dataUrl);
+          renderPhotoGrid();
+        } catch (err) {
+          console.error(err);
+          showToast(err?.message || "No se pudo procesar una imagen");
+        }
+      }
+
       giftPhotoInput.value = "";
-      photoPreviewImg.src = "";
-      photoPreviewWrap.classList.add("hidden");
     });
 
     formGift.addEventListener("submit", async (e) => {
@@ -1991,10 +2276,12 @@
         return;
       }
 
+      const wasEditing = Boolean(editingGiftId);
       const inlineName = giftNewPersonInput.value.trim();
       const selectedId = giftPersonSelect.value;
+      const keepingPerson = wasEditing && (selectedId === "__keep__" || !selectedId);
 
-      if (!selectedId && !inlineName) {
+      if (!selectedId && !inlineName && !keepingPerson) {
         showToast("Selecciona o añade una persona");
         inlinePersonBox.classList.remove("hidden");
         giftNewPersonInput.focus();
@@ -2005,42 +2292,59 @@
       btnSaveGift.textContent = "Guardando...";
 
       try {
-        let targetPerson;
+        let personName = "";
+
         if (inlineName) {
-          targetPerson = await ensurePersonExists(inlineName);
-        } else {
-          targetPerson = people.find((p) => p.id === selectedId);
+          const person = await ensurePersonExists(inlineName);
+          personName = person.nombre;
+        } else if (selectedId && selectedId !== "__keep__") {
+          const person = people.find((p) => p.id === selectedId);
+          if (!person) throw new Error("Persona no válida");
+          personName = person.nombre;
+        } else if (editingGift) {
+          personName = editingGift.personaNombre || "";
         }
 
-        if (!targetPerson) {
+        if (!personName) {
           throw new Error("Persona no válida");
         }
 
-        const fotoUrl = compressedPhotoDataUrl || "";
-        const priceRaw = giftPriceInput.value.trim();
-        const precio = priceRaw === "" ? null : Number(priceRaw);
-        const enlace = sanitizeUrl(giftLinkInput.value);
+        const imageUrls = photoList.slice(0, MAX_PHOTOS);
+        const imageUrl = imageUrls[0] || "";
+        const storeUrl = sanitizeUrl(giftLinkInput.value);
 
-        // Campos obligatorios según las reglas de Firestore de este proyecto
-        await addDoc(collection(db, "listas_regalos", activePin, "items"), {
-          familyMember: targetPerson.nombre,
-          name: title,
-          price: Number.isNaN(precio) ? null : precio,
-          storeUrl: enlace,
-          imageUrl: fotoUrl,
-          purchased: false,
-          createdAt: Date.now()
-        });
+        if (editingGiftId) {
+          // El update de las reglas exige que "purchased" siga siendo booleano;
+          // el resto de campos se puede modificar.
+          await updateDoc(doc(db, "listas_regalos", activePin, "items", editingGiftId), {
+            familyMember: personName,
+            name: title,
+            storeUrl,
+            imageUrl,
+            imageUrls
+          });
+        } else {
+          // Campos obligatorios según las reglas de Firestore de este proyecto
+          await addDoc(collection(db, "listas_regalos", activePin, "items"), {
+            familyMember: personName,
+            name: title,
+            storeUrl,
+            imageUrl,
+            imageUrls,
+            purchased: false,
+            createdAt: Date.now()
+          });
+        }
 
         closeModal(modalGift);
         resetGiftForm();
-        showToast("Regalo guardado");
+        showToast(wasEditing ? "Cambios guardados" : "Regalo guardado");
       } catch (err) {
         console.error(err);
-        showToast("Error al guardar el regalo");
+        showToast(wasEditing ? "No se pudieron guardar los cambios" : "Error al guardar el regalo");
       } finally {
         btnSaveGift.disabled = false;
-        btnSaveGift.textContent = "Guardar regalo";
+        btnSaveGift.textContent = editingGiftId ? "Guardar cambios" : "Guardar regalo";
       }
     });
 
